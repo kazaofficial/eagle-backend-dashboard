@@ -3,10 +3,26 @@ package main
 import (
 	"log"
 
+	"eagle-backend-dashboard/config"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
+	// Membuat koneksi dari config/database.go
+	db1, err := config.NewDatabaseConfig()
+	if err != nil {
+		// log with comment
+		log.Fatalf("Failed to load database config: %v", err)
+	}
+
+	// Connect ke database
+	_, err = config.Connect(db1)
+	if err != nil {
+		// log with comment
+		log.Fatalf(err.Error())
+	}
+
 	// Membuat instance Fiber
 	app := fiber.New()
 
