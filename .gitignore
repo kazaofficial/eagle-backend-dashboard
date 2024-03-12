@@ -1,0 +1,54 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Editor-specific files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Compiled files for Vim
+*.swp
+*.swo
+*.swn
+
+# macOS Finder files
+.AppleDouble
+.LSOverride
+
+# Windows folder configuration
+Desktop.ini
+ehthumbs.db
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Go-specific files
+.idea/
+*.iml
+
+# End of file marker for JetBrains IDEs
+.idea/
+
+# Compiled Go files
+*.exe
+*.test
+*.prof
+*.out
+
+# Dependency directories
+vendor/
+
+# Binary executables
+*.exe
+*.out
+
+.env
+tmp/
+
+# Documentation Swagger
+docs/
