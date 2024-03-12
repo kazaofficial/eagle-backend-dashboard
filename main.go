@@ -53,13 +53,16 @@ func main() {
 
 	// initialize repositories
 	userGroupRepository := repository.NewUserGroupRepository(db)
+	menuRepository := repository.NewMenuRepository(db)
 
 	// initialize services
 	userGroupService := service.NewUserGroupService(userGroupRepository)
+	menuService := service.NewMenuService(menuRepository)
 
 	// initialize controllers group for api/v1
 	apiv1 := app.Group("/api/v1")
 	controller.NewUserGroupRoutes(apiv1, userGroupService)
+	controller.NewMenuRoutes(apiv1, menuService)
 
 	// Add a middleware for handling not found errors
 	app.Use(func(c *fiber.Ctx) error {

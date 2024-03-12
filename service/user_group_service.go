@@ -5,6 +5,7 @@ import (
 	"eagle-backend-dashboard/dto"
 	"eagle-backend-dashboard/entity"
 	"eagle-backend-dashboard/repository"
+	"strings"
 )
 
 // UserGroupServiceImpl implements the UserGroupService interface.
@@ -36,7 +37,13 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 		offset = (page - 1) * limit
 	}
 
-	userGroups, err := service.userGroupRepository.GetUserGroup(ctx, &limit, &offset, &request.Sort)
+	sort := "id desc"
+	if request.Sort != "" {
+		sort = request.Sort
+		sort = strings.ReplaceAll(sort, ".", " ")
+	}
+
+	userGroups, err := service.userGroupRepository.GetUserGroup(ctx, &limit, &offset, &sort)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -48,7 +55,7 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 
 	userGroupResponses := []dto.UserGroupResponse{}
 	for _, userGroup := range userGroups {
-		userGroupResponses = append(userGroupResponses, ConverEntityToDTO(userGroup))
+		userGroupResponses = append(userGroupResponses, ConverUserGroupEntityToDTO(userGroup))
 	}
 
 	pagination := dto.Pagination{
@@ -62,7 +69,7 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 	return userGroupResponses, &pagination, nil
 }
 
-func ConverEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
+func ConverUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
 	userGroupResponse := dto.UserGroupResponse{
 		ID:          userGroup.ID,
 		Name:        userGroup.Name,
