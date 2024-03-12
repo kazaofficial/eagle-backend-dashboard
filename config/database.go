@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -21,6 +22,11 @@ type DatabaseConfig struct {
 
 // NewDatabaseConfig creates a new DatabaseConfig instance from environment variables.
 func NewDatabaseConfig() (*DatabaseConfig, error) {
+	// load env
+	err := godotenv.Load()
+	if err != nil {
+		return nil, fmt.Errorf("error loading .env file")
+	}
 	return &DatabaseConfig{
 		Host:     os.Getenv("DB_HOST"),
 		Port:     os.Getenv("DB_PORT"),

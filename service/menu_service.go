@@ -35,7 +35,7 @@ func (s *MenuServiceImpl) GetMenu(ctx context.Context, request *dto.MenuRequest)
 		offset = (page - 1) * limit
 	}
 
-	sort := "id desc"
+	sort := "id asc"
 	if request.Sort != "" {
 		sort = request.Sort
 		sort = strings.ReplaceAll(sort, ".", " ")
@@ -67,11 +67,16 @@ func (s *MenuServiceImpl) GetMenu(ctx context.Context, request *dto.MenuRequest)
 }
 
 func ConverMenuEntityToDTO(entity entity.Menu) dto.MenuResponse {
+	subMenus := []dto.MenuResponse{}
+	for _, subMenu := range entity.SubMenus {
+		subMenus = append(subMenus, ConverMenuEntityToDTO(subMenu))
+	}
 	return dto.MenuResponse{
 		ID:          entity.ID,
 		Name:        entity.Name,
 		ParentID:    entity.ParentID,
 		Description: entity.Description,
+		SubMenus:    subMenus,
 		CreatedAt:   entity.CreatedAt,
 		UpdatedAt:   entity.UpdatedAt,
 	}

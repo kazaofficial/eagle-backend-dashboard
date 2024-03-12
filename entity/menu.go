@@ -7,6 +7,7 @@ type Menu struct {
 	ParentID    *int       `json:"parent_id"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
+	SubMenus    []Menu     `json:"sub_menus" gorm:"foreignKey:ParentID"`
 	CreatedAt   *time.Time `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`
 }

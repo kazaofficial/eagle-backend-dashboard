@@ -29,6 +29,8 @@ func (r *MenuRepositoryImpl) GetMenu(ctx context.Context, limit *int, offset *in
 	if sort != nil {
 		query = query.Order(*sort)
 	}
+	query = query.Where("parent_id = ?", 1)
+	query = query.Preload("SubMenus.SubMenus.SubMenus").Find(&menus)
 	err := query.Find(&menus).Error
 	if err != nil {
 		return nil, err
