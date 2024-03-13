@@ -1,18 +1,27 @@
 package dto
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type UserGroupResponse struct {
-	ID            int        `json:"id,omitempty"`
-	Name          string     `json:"name"`
-	Description   string     `json:"description"`
-	NumberOfUsers int        `json:"number_of_users,omitempty"`
-	CreatedAt     *time.Time `json:"created_at"`
-	UpdatedAt     *time.Time `json:"updated_at"`
-	DeletedAt     *time.Time `json:"deleted_at"`
+	ID            int            `json:"id,omitempty"`
+	Name          string         `json:"name"`
+	Description   string         `json:"description"`
+	NumberOfUsers *int           `json:"number_of_users,omitempty"`
+	CreatedAt     *time.Time     `json:"created_at"`
+	UpdatedAt     *time.Time     `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt `json:"deleted_at"`
 }
 
 type UserGroupRequest struct {
+	Name        string `json:"name" validate:"required"`
+	Description string `json:"description"`
+}
+
+type UserGroupListRequest struct {
 	Page  *int   `json:"page"`
 	Limit *int   `json:"limit"`
 	Sort  string `json:"sort"`

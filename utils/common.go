@@ -17,6 +17,8 @@ func GetStatusCodeFromError(err error) (int, string) {
 		return http.StatusNotFound, "Data Not Found"
 	case bcrypt.ErrMismatchedHashAndPassword:
 		return http.StatusUnauthorized, "Password is incorrect"
+	case gorm.ErrForeignKeyViolated:
+		return http.StatusConflict, "Data is being used with another data"
 	default:
 		return http.StatusInternalServerError, "Internal Server Error"
 	}

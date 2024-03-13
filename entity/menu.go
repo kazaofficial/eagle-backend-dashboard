@@ -3,7 +3,7 @@ package entity
 import "time"
 
 type Menu struct {
-	ID          int        `json:"id"`
+	ID          int        `json:"id" gorm:"primaryKey"`
 	ParentID    *int       `json:"parent_id"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`

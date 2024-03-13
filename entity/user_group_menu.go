@@ -3,11 +3,11 @@ package entity
 import "time"
 
 type UserGroupMenu struct {
-	ID          int        `db:"id,omitempty"`
-	UserGroupID int        `db:"user_group_id"`
-	MenuID      int        `db:"menu_id"`
-	CreatedAt   *time.Time `db:"created_at"`
-	UpdatedAt   *time.Time `db:"updated_at"`
+	ID          int        `json:"id,omitempty" gorm:"primaryKey" json:"id"`
+	UserGroupID int        `json:"user_group_id"`
+	MenuID      int        `json:"menu_id"`
+	CreatedAt   *time.Time `json:"created_at"`
+	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
 // TableName returns the table name of the UserGroupMenu

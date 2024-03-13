@@ -5,6 +5,7 @@ import (
 	"eagle-backend-dashboard/dto"
 	"eagle-backend-dashboard/entity"
 	"eagle-backend-dashboard/repository"
+	"errors"
 	"strings"
 )
 
@@ -20,7 +21,7 @@ func NewUserGroupService(userGroupRepository repository.UserGroupRepository) Use
 	}
 }
 
-func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *dto.UserGroupRequest) ([]dto.UserGroupResponse, *dto.Pagination, error) {
+func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *dto.UserGroupListRequest) ([]dto.UserGroupResponse, *dto.Pagination, error) {
 	offset := 0
 	page := 1
 	limit := 10
@@ -79,6 +80,56 @@ func (service *UserGroupServiceImpl) GetUserGroupByID(ctx context.Context, id in
 	return &userGroupResponse, nil
 }
 
+func (service *UserGroupServiceImpl) CreateUserGroup(ctx context.Context, request *dto.UserGroupRequest) (*dto.UserGroupResponse, error) {
+	userGroup := entity.UserGroup{
+		Name:        request.Name,
+		Description: request.Description,
+	}
+
+	err := service.userGroupRepository.CreateUserGroup(ctx, &userGroup)
+	if err != nil {
+		return nil, err
+	}
+
+	userGroupResponse := ConverUserGroupEntityToDTO(userGroup)
+	return &userGroupResponse, nil
+}
+
+func (service *UserGroupServiceImpl) UpdateUserGroup(ctx context.Context, id int, request *dto.UserGroupRequest) (*dto.UserGroupResponse, error) {
+	userGroup, err := service.userGroupRepository.GetUserGroupByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	userGroup.Name = request.Name
+	userGroup.Description = request.Description
+
+	err = service.userGroupRepository.UpdateUserGroup(ctx, userGroup)
+	if err != nil {
+		return nil, err
+	}
+
+	userGroupResponse := ConverUserGroupEntityToDTO(*userGroup)
+	return &userGroupResponse, nil
+}
+
+func (service *UserGroupServiceImpl) DeleteUserGroup(ctx context.Context, id int) (*dto.UserGroupResponse, error) {
+	userGroup, err := service.userGroupRepository.GetUserGroupByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	if userGroup.ID == 1 {
+		return nil, errors.New("cannot delete this user group")
+	}
+
+	err = service.userGroupRepository.DeleteUserGroup(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	userGroupResponse := ConverUserGroupEntityToDTO(*userGroup)
+	return &userGroupResponse, nil
+}
 func ConverUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
 	userGroupResponse := dto.UserGroupResponse{
 		ID:            userGroup.ID,
