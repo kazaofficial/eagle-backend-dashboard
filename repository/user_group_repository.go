@@ -44,3 +44,12 @@ func (r *UserGroupRepositoryImpl) CountUserGroup(ctx context.Context) (int, erro
 	}
 	return int(count), nil
 }
+
+func (r *UserGroupRepositoryImpl) GetUserGroupByID(ctx context.Context, id int) (*entity.UserGroup, error) {
+	var userGroup entity.UserGroup
+	err := r.db.Where("id = ?", id).First(&userGroup).Error
+	if err != nil {
+		return nil, err
+	}
+	return &userGroup, nil
+}

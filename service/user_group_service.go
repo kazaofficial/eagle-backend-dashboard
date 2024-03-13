@@ -69,6 +69,16 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 	return userGroupResponses, &pagination, nil
 }
 
+func (service *UserGroupServiceImpl) GetUserGroupByID(ctx context.Context, id int) (*dto.UserGroupResponse, error) {
+	userGroup, err := service.userGroupRepository.GetUserGroupByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	userGroupResponse := ConverUserGroupEntityToDTO(*userGroup)
+	return &userGroupResponse, nil
+}
+
 func ConverUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
 	userGroupResponse := dto.UserGroupResponse{
 		ID:          userGroup.ID,
