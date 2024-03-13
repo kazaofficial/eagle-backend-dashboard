@@ -40,7 +40,7 @@ func (r *MenuRepositoryImpl) GetMenu(ctx context.Context, limit *int, offset *in
 
 func (r *MenuRepositoryImpl) CountMenu(ctx context.Context) (int, error) {
 	var count int64
-	err := r.db.Model(&entity.Menu{}).Count(&count).Error
+	err := r.db.Model(&entity.Menu{}).Where("parent_id = ?", 1).Count(&count).Error
 	if err != nil {
 		return 0, err
 	}
