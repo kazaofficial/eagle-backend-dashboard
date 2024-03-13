@@ -4,7 +4,6 @@ import (
 	"context"
 	"eagle-backend-dashboard/dto"
 	"eagle-backend-dashboard/repository"
-	"fmt"
 	"os"
 	"time"
 
@@ -23,7 +22,6 @@ func NewAuthService(userRepository repository.UserRepository) AuthService {
 }
 
 func (s *AuthServiceImpl) Login(ctx context.Context, request dto.LoginRequest) (*dto.LoginResponse, error) {
-	fmt.Println("-------------", os.Getenv("APP_SECRET"))
 	user, err := s.userRepository.GetUserByUsername(ctx, request.Username)
 	if err != nil {
 		return nil, err
@@ -35,12 +33,12 @@ func (s *AuthServiceImpl) Login(ctx context.Context, request dto.LoginRequest) (
 	}
 
 	// create token
-	expied_at := time.Now().Add(time.Hour * 24).Unix()
+	expired_at := time.Now().Add(time.Hour * 24).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, dto.Claims{
 		ID:       user.ID,
 		Username: user.Username,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expied_at,
+			ExpiresAt: expired_at,
 		},
 	})
 
@@ -51,6 +49,6 @@ func (s *AuthServiceImpl) Login(ctx context.Context, request dto.LoginRequest) (
 
 	return &dto.LoginResponse{
 		AccessToken: tokenString,
-		ExpiredAt:   expied_at,
+		ExpiredAt:   expired_at,
 	}, nil
 }

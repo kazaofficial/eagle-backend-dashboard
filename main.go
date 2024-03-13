@@ -7,6 +7,7 @@ import (
 	"eagle-backend-dashboard/config"
 	"eagle-backend-dashboard/controller"
 	"eagle-backend-dashboard/dto"
+	"eagle-backend-dashboard/middleware"
 	"eagle-backend-dashboard/repository"
 	"eagle-backend-dashboard/service"
 
@@ -60,6 +61,9 @@ func main() {
 	userGroupService := service.NewUserGroupService(userGroupRepository)
 	menuService := service.NewMenuService(menuRepository)
 	authService := service.NewAuthService(userRepository)
+
+	// add middleware
+	app.Use(middleware.AuthenticationMiddleware())
 
 	// initialize controllers group for api/v1
 	apiv1 := app.Group("/api/v1")
