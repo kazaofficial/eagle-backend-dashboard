@@ -20,6 +20,9 @@ func NewUserGroupRepository(db *gorm.DB) UserGroupRepository {
 func (r *UserGroupRepositoryImpl) GetUserGroup(ctx context.Context, limit *int, offset *int, sort *string) ([]entity.UserGroup, error) {
 	var userGroups []entity.UserGroup
 	query := r.db
+	query = query.Joins("JOIN users ON user_groups.id = users.group_id").
+		Select("user_groups.*, COUNT(users.id) AS number_of_users").
+		Group("user_groups.id")
 	if limit != nil {
 		query = query.Limit(*limit)
 	}

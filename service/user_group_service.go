@@ -81,12 +81,13 @@ func (service *UserGroupServiceImpl) GetUserGroupByID(ctx context.Context, id in
 
 func ConverUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
 	userGroupResponse := dto.UserGroupResponse{
-		ID:          userGroup.ID,
-		Name:        userGroup.Name,
-		Description: userGroup.Description,
-		CreatedAt:   userGroup.CreatedAt,
-		UpdatedAt:   userGroup.UpdatedAt,
-		DeletedAt:   userGroup.DeletedAt,
+		ID:            userGroup.ID,
+		Name:          userGroup.Name,
+		Description:   userGroup.Description,
+		NumberOfUsers: userGroup.NumberOfUsers,
+		CreatedAt:     userGroup.CreatedAt,
+		UpdatedAt:     userGroup.UpdatedAt,
+		DeletedAt:     userGroup.DeletedAt,
 	}
 
 	return userGroupResponse
