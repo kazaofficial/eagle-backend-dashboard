@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/golang-jwt/jwt/v5"
+import "github.com/dgrijalva/jwt-go"
 
 type Response struct {
 	StatusCode int         `json:"status_code"`
@@ -28,6 +28,7 @@ type ErrorResponse struct {
 }
 
 type Claims struct {
+	ID       int    `json:"id"`
 	Username string `json:"username"`
-	jwt.Claims
+	jwt.StandardClaims
 }

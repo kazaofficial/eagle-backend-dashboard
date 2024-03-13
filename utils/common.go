@@ -7,17 +7,17 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetStatusCodeFromError(err error) int {
+func GetStatusCodeFromError(err error) (int, string) {
 	if err == nil {
-		return http.StatusOK
+		return http.StatusOK, "Success"
 	}
 
 	switch err {
 	case gorm.ErrRecordNotFound:
-		return http.StatusNotFound
+		return http.StatusNotFound, "Data Not Found"
 	case bcrypt.ErrMismatchedHashAndPassword:
-		return http.StatusUnauthorized
+		return http.StatusUnauthorized, "Password is incorrect"
 	default:
-		return http.StatusInternalServerError
+		return http.StatusInternalServerError, "Internal Server Error"
 	}
 }
