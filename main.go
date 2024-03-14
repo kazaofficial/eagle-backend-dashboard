@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"runtime/debug"
 
 	"eagle-backend-dashboard/config"
 	"eagle-backend-dashboard/controller"
@@ -51,6 +53,32 @@ func main() {
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestSpeed,
 	}))
+	app.Use(func(c *fiber.Ctx) error {
+		// Catch panics
+		defer func() {
+			if r := recover(); r != nil {
+				err, ok := r.(error)
+				if !ok {
+					err = fmt.Errorf("%v", r)
+				}
+
+				// Get the stack trace
+				stackTrace := debug.Stack()
+
+				// Log the error along with the stack trace
+				log.Printf("%v\n%s", err, stackTrace)
+
+				// Send a response to the client
+				c.Status(500).JSON(dto.ErrorResponse{
+					StatusCode: 500,
+					Message:    "Internal Server Error",
+					Error:      err.Error(),
+				})
+			}
+		}()
+
+		return c.Next()
+	})
 
 	// initialize repositories
 	userGroupRepository := repository.NewUserGroupRepository(db)
