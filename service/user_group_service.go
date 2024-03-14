@@ -130,6 +130,7 @@ func (service *UserGroupServiceImpl) DeleteUserGroup(ctx context.Context, id int
 	userGroupResponse := ConverUserGroupEntityToDTO(*userGroup)
 	return &userGroupResponse, nil
 }
+
 func ConverUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
 	userGroupResponse := dto.UserGroupResponse{
 		ID:            userGroup.ID,

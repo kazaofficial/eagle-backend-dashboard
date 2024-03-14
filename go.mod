@@ -6,7 +6,7 @@ toolchain go1.22.1
 
 require github.com/gofiber/fiber/v2 v2.52.2
 
-require github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+require github.com/dgrijalva/jwt-go v3.2.0+incompatible
 
 require (
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
