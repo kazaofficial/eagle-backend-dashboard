@@ -7,7 +7,6 @@ import (
 
 // MenuRepository defines the methods for interacting with menus.
 type MenuRepository interface {
-	GetMenu(ctx context.Context, limit *int, offset *int, sort *string) ([]entity.Menu, error)
-	CountMenu(ctx context.Context) (int, error)
-	GetMenuByID(ctx context.Context, id int) (*entity.Menu, error)
+	GetMenuByUserGroupID(ctx context.Context, userGroupID int) ([]entity.Menu, error)
+	GetMenuByIDAndUserGroupID(ctx context.Context, id int, userGroupID int) (*entity.Menu, error)
 }

@@ -35,8 +35,9 @@ func (s *AuthServiceImpl) Login(ctx context.Context, request dto.LoginRequest) (
 	// create token
 	expired_at := time.Now().Add(time.Hour * 24).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, dto.Claims{
-		ID:       user.ID,
-		Username: user.Username,
+		ID:          user.ID,
+		Username:    user.Username,
+		UserGroupID: user.UserGroupID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expired_at,
 		},

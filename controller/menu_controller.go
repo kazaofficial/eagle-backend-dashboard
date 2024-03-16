@@ -4,9 +4,6 @@ import (
 	"eagle-backend-dashboard/dto"
 	"eagle-backend-dashboard/service"
 	"eagle-backend-dashboard/utils"
-	"strconv"
-
-	"github.com/go-playground/validator/v10"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -20,43 +17,13 @@ func NewMenuRoutes(handler fiber.Router, menuService service.MenuService) {
 		menuService: menuService,
 	}
 
-	handler.Get("/menu", r.GetMenu)
-	handler.Get("/menu/:id", r.GetMenuByID)
+	handler.Get("/menu", r.GetMenuByUserGroupID)
+	handler.Get("/menu/:id", r.GetMenuByIDAndUserGroupID)
 }
 
-func (controller *MenuController) GetMenu(c *fiber.Ctx) error {
-	var request dto.MenuRequest
-
-	ctx := c.Context()
-	err := c.QueryParser(&request)
-	if err != nil {
-		response := dto.ErrorResponse{
-			StatusCode: 400,
-			Message:    "Bad Request, " + err.Error(),
-			Error:      nil,
-		}
-		return c.Status(400).JSON(response)
-	}
-
-	validate := validator.New()
-	err = validate.Struct(request)
-	if err != nil {
-		if validationErrors, ok := err.(validator.ValidationErrors); ok {
-			var validationErrorMessages []string
-			for _, validationError := range validationErrors {
-				validationErrorMessages = append(validationErrorMessages, validationError.Error())
-			}
-
-			response := dto.ErrorResponse{
-				StatusCode: 400,
-				Message:    "Validation Error",
-				Error:      validationErrorMessages,
-			}
-			return c.Status(400).JSON(response)
-		}
-	}
-
-	menuResponses, pagination, err := controller.menuService.GetMenu(ctx, &request)
+func (r *MenuController) GetMenuByUserGroupID(c *fiber.Ctx) error {
+	userGroupID := c.Locals("user_group_id").(int)
+	menuResponses, err := r.menuService.GetMenuByUserGroupID(c.Context(), userGroupID)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -67,32 +34,27 @@ func (controller *MenuController) GetMenu(c *fiber.Ctx) error {
 		return c.Status(status_code).JSON(response)
 	}
 
-	response := dto.ResponseList{
-		Response: dto.Response{
-			StatusCode: 200,
-			Message:    "Success",
-			Data:       menuResponses,
-		},
-		Pagination: pagination,
+	response := dto.Response{
+		StatusCode: 200,
+		Message:    "Success",
+		Data:       menuResponses,
 	}
+
 	return c.Status(200).JSON(response)
 }
 
-func (controller *MenuController) GetMenuByID(c *fiber.Ctx) error {
-	id := c.Params("id")
-
-	ctx := c.Context()
-	idInt, err := strconv.Atoi(id)
+func (r *MenuController) GetMenuByIDAndUserGroupID(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
 	if err != nil {
 		response := dto.ErrorResponse{
 			StatusCode: 400,
-			Message:    "Bad Request, invalid ID",
+			Message:    "Bad Request, " + err.Error(),
 			Error:      nil,
 		}
 		return c.Status(400).JSON(response)
 	}
-
-	menuResponse, err := controller.menuService.GetMenuByID(ctx, idInt)
+	userGroupID := c.Locals("user_group_id").(int)
+	menuResponse, err := r.menuService.GetMenuByIDAndUserGroupID(c.Context(), id, userGroupID)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -108,5 +70,6 @@ func (controller *MenuController) GetMenuByID(c *fiber.Ctx) error {
 		Message:    "Success",
 		Data:       menuResponse,
 	}
+
 	return c.Status(200).JSON(response)
 }

@@ -30,12 +30,14 @@ func main() {
 
 	menus := []entity.User{
 		{
-			ID:       1,
-			GroupID:  1,
-			Name:     "Super Admin",
-			Username: "superadmin",
-			Password: string(hashedPassword),
-			NRP:      "1234567890",
+			ID:          1,
+			UserGroupID: 1,
+			Name:        "Super Admin",
+			Username:    "superadmin",
+			Password:    string(hashedPassword),
+			NRP:         "1234567890",
+			CreatedBy:   1,
+			UpdatedBy:   1,
 		},
 	}
 

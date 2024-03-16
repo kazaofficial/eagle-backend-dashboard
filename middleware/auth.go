@@ -50,6 +50,7 @@ func AuthenticationMiddleware() fiber.Handler {
 		if Claims, ok := access_token.Claims.(*dto.Claims); ok && access_token.Valid {
 			c.Locals("id", Claims.ID)
 			c.Locals("username", Claims.Username)
+			c.Locals("user_group_id", Claims.UserGroupID)
 		} else {
 			return c.Status(fiber.StatusUnauthorized).JSON(dto.ErrorResponse{
 				StatusCode: fiber.StatusUnauthorized,

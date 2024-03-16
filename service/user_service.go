@@ -80,11 +80,11 @@ func (service *UserServiceImpl) CreateUser(ctx context.Context, request *dto.Use
 		return nil, err
 	}
 	user := entity.User{
-		GroupID:  request.GroupID,
-		Name:     request.Name,
-		Username: request.Username,
-		Password: string(hashedPassword),
-		NRP:      request.NRP,
+		UserGroupID: request.UserGroupID,
+		Name:        request.Name,
+		Username:    request.Username,
+		Password:    string(hashedPassword),
+		NRP:         request.NRP,
 	}
 	err = service.UserRepository.CreateUser(ctx, &user)
 	if err != nil {
@@ -105,8 +105,8 @@ func (service *UserServiceImpl) UpdateUser(ctx context.Context, id int, me bool,
 		user.Name = request.Name
 	}
 
-	if request.GroupID != 0 {
-		user.GroupID = request.GroupID
+	if request.UserGroupID != 0 {
+		user.UserGroupID = request.UserGroupID
 	}
 
 	if request.NRP != "" {
@@ -139,14 +139,14 @@ func (service *UserServiceImpl) DeleteUser(ctx context.Context, id int) (*dto.Us
 
 func ConvertUserEntityToDTO(user entity.User) dto.UserResponse {
 	userResponse := dto.UserResponse{
-		ID:        user.ID,
-		GroupID:   user.GroupID,
-		Name:      user.Name,
-		Username:  user.Username,
-		NRP:       user.NRP,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-		DeletedAt: user.DeletedAt,
+		ID:          user.ID,
+		UserGroupID: user.UserGroupID,
+		Name:        user.Name,
+		Username:    user.Username,
+		NRP:         user.NRP,
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
+		DeletedAt:   user.DeletedAt,
 	}
 	return userResponse
 }

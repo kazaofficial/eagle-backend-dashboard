@@ -28,7 +28,8 @@ type ErrorResponse struct {
 }
 
 type Claims struct {
-	ID       int    `json:"id"`
-	Username string `json:"username"`
+	ID          int    `json:"id"`
+	Username    string `json:"username"`
+	UserGroupID int    `json:"user_group_id"`
 	jwt.StandardClaims
 }

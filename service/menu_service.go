@@ -5,7 +5,6 @@ import (
 	"eagle-backend-dashboard/dto"
 	"eagle-backend-dashboard/entity"
 	"eagle-backend-dashboard/repository"
-	"strings"
 )
 
 type MenuServiceImpl struct {
@@ -18,36 +17,10 @@ func NewMenuService(menuRepository repository.MenuRepository) MenuService {
 	}
 }
 
-func (s *MenuServiceImpl) GetMenu(ctx context.Context, request *dto.MenuRequest) ([]dto.MenuResponse, *dto.Pagination, error) {
-	offset := 0
-	page := 1
-	limit := 10
-
-	if request.Page != nil {
-		page = *request.Page
-	}
-
-	if request.Limit != nil {
-		limit = *request.Limit
-	}
-
-	if page > 1 {
-		offset = (page - 1) * limit
-	}
-
-	sort := "id asc"
-	if request.Sort != "" {
-		sort = request.Sort
-		sort = strings.ReplaceAll(sort, ".", " ")
-	}
-
-	menus, err := s.menuRepository.GetMenu(ctx, &limit, &offset, &sort)
+func (service *MenuServiceImpl) GetMenuByUserGroupID(ctx context.Context, userGroupID int) ([]dto.MenuResponse, error) {
+	menus, err := service.menuRepository.GetMenuByUserGroupID(ctx, userGroupID)
 	if err != nil {
-		return nil, nil, err
-	}
-	count, err := s.menuRepository.CountMenu(ctx)
-	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	menuResponses := []dto.MenuResponse{}
@@ -55,22 +28,15 @@ func (s *MenuServiceImpl) GetMenu(ctx context.Context, request *dto.MenuRequest)
 		menuResponses = append(menuResponses, ConverMenuEntityToDTO(menu))
 	}
 
-	pagination := dto.Pagination{
-		Page:      page,
-		Limit:     limit,
-		Total:     len(menus),
-		TotalData: count,
-		TotalPage: count/limit + 1,
-	}
-
-	return menuResponses, &pagination, nil
+	return menuResponses, nil
 }
 
-func (s *MenuServiceImpl) GetMenuByID(ctx context.Context, id int) (*dto.MenuResponse, error) {
-	menu, err := s.menuRepository.GetMenuByID(ctx, id)
+func (service *MenuServiceImpl) GetMenuByIDAndUserGroupID(ctx context.Context, id int, userGroupID int) (*dto.MenuResponse, error) {
+	menu, err := service.menuRepository.GetMenuByIDAndUserGroupID(ctx, id, userGroupID)
 	if err != nil {
 		return nil, err
 	}
+
 	menuResponse := ConverMenuEntityToDTO(*menu)
 	return &menuResponse, nil
 }

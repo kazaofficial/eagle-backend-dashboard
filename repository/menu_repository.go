@@ -17,38 +17,40 @@ func NewMenuRepository(db *gorm.DB) MenuRepository {
 	}
 }
 
-func (r *MenuRepositoryImpl) GetMenu(ctx context.Context, limit *int, offset *int, sort *string) ([]entity.Menu, error) {
+func (r *MenuRepositoryImpl) GetMenuByUserGroupID(ctx context.Context, userGroupID int) ([]entity.Menu, error) {
 	var menus []entity.Menu
-	query := r.db
-	if limit != nil {
-		query = query.Limit(*limit)
-	}
-	if offset != nil {
-		query = query.Offset(*offset)
-	}
-	if sort != nil {
-		query = query.Order(*sort)
-	}
-	query = query.Where("parent_id = ?", 1)
-	err := query.Find(&menus).Error
+	// menu join to user_group_menu
+	err := r.db.
+		Joins("JOIN user_group_menus ON menus.id = user_group_menus.menu_id").
+		Where("user_group_menus.user_group_id = ?", userGroupID).
+		Where("menus.parent_id = ?", 1).
+		Find(&menus).Error
+
 	if err != nil {
 		return nil, err
 	}
 	return menus, nil
 }
 
-func (r *MenuRepositoryImpl) CountMenu(ctx context.Context) (int, error) {
-	var count int64
-	err := r.db.Model(&entity.Menu{}).Where("parent_id = ?", 1).Count(&count).Error
-	if err != nil {
-		return 0, err
-	}
-	return int(count), nil
-}
-
-func (r *MenuRepositoryImpl) GetMenuByID(ctx context.Context, id int) (*entity.Menu, error) {
+func (r *MenuRepositoryImpl) GetMenuByIDAndUserGroupID(ctx context.Context, id int, userGroupID int) (*entity.Menu, error) {
 	var menu entity.Menu
-	err := r.db.Where("id = ?", id).Preload("SubMenus.SubMenus.SubMenus.SubMenus.SubMenus").First(&menu).Error
+	// menu join to user_group_menu
+	err := r.db.
+		Joins("JOIN user_group_menus ON menus.id = user_group_menus.menu_id").
+		Where("user_group_menus.user_group_id = ?", userGroupID).
+		Where("menus.id = ?", id).
+		Where("menus.id != ?", 1).
+		// preload submenus with join
+		Preload("SubMenus", func(db *gorm.DB) *gorm.DB {
+			return db.Joins("JOIN user_group_menus ON menus.id = user_group_menus.menu_id").
+				Where("user_group_menus.user_group_id = ?", userGroupID)
+		}).
+		Preload("SubMenus.SubMenus", func(db *gorm.DB) *gorm.DB {
+			return db.Joins("JOIN user_group_menus ON menus.id = user_group_menus.menu_id").
+				Where("user_group_menus.user_group_id = ?", userGroupID)
+		}).
+		First(&menu).Error
+
 	if err != nil {
 		return nil, err
 	}
