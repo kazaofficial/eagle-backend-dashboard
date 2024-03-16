@@ -30,7 +30,6 @@ func (r *MenuRepositoryImpl) GetMenu(ctx context.Context, limit *int, offset *in
 		query = query.Order(*sort)
 	}
 	query = query.Where("parent_id = ?", 1)
-	query = query.Preload("SubMenus.SubMenus.SubMenus").Find(&menus)
 	err := query.Find(&menus).Error
 	if err != nil {
 		return nil, err
@@ -45,4 +44,13 @@ func (r *MenuRepositoryImpl) CountMenu(ctx context.Context) (int, error) {
 		return 0, err
 	}
 	return int(count), nil
+}
+
+func (r *MenuRepositoryImpl) GetMenuByID(ctx context.Context, id int) (*entity.Menu, error) {
+	var menu entity.Menu
+	err := r.db.Where("id = ?", id).Preload("SubMenus.SubMenus.SubMenus.SubMenus.SubMenus").First(&menu).Error
+	if err != nil {
+		return nil, err
+	}
+	return &menu, nil
 }

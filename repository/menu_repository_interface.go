@@ -9,4 +9,5 @@ import (
 type MenuRepository interface {
 	GetMenu(ctx context.Context, limit *int, offset *int, sort *string) ([]entity.Menu, error)
 	CountMenu(ctx context.Context) (int, error)
+	GetMenuByID(ctx context.Context, id int) (*entity.Menu, error)
 }

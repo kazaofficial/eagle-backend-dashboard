@@ -66,6 +66,15 @@ func (s *MenuServiceImpl) GetMenu(ctx context.Context, request *dto.MenuRequest)
 	return menuResponses, &pagination, nil
 }
 
+func (s *MenuServiceImpl) GetMenuByID(ctx context.Context, id int) (*dto.MenuResponse, error) {
+	menu, err := s.menuRepository.GetMenuByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	menuResponse := ConverMenuEntityToDTO(*menu)
+	return &menuResponse, nil
+}
+
 func ConverMenuEntityToDTO(entity entity.Menu) dto.MenuResponse {
 	subMenus := []dto.MenuResponse{}
 	for _, subMenu := range entity.SubMenus {
