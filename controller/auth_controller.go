@@ -62,7 +62,7 @@ func (controller *AuthController) Login(c *fiber.Ctx) error {
 			Message:    message,
 			Error:      err.Error(),
 		}
-		return c.Status(500).JSON(response)
+		return c.Status(status_code).JSON(response)
 	}
 
 	response := dto.Response{

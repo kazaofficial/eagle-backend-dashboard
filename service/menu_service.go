@@ -51,6 +51,8 @@ func ConverMenuEntityToDTO(entity entity.Menu) dto.MenuResponse {
 		Name:        entity.Name,
 		ParentID:    entity.ParentID,
 		Description: entity.Description,
+		Icon:        entity.Icon,
+		Url:         entity.Url,
 		SubMenus:    subMenus,
 		CreatedAt:   entity.CreatedAt,
 		UpdatedAt:   entity.UpdatedAt,
