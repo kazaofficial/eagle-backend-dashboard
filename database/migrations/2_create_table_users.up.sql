@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     user_group_id INT NOT NULL REFERENCES user_groups(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    role VARCHAR(100) NOT NULL CHECK (role IN ('user', 'admin')),
     name VARCHAR(100) NOT NULL,
     username VARCHAR(100) NOT NULL UNIQUE,
     password TEXT NOT NULL,

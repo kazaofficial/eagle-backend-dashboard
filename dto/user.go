@@ -7,9 +7,9 @@ import (
 type UserResponse struct {
 	ID          int        `gorm:"primary_key" json:"id"`
 	UserGroupID int        `json:"user_group_id"`
+	Role        string     `json:"role"`
 	Name        string     `json:"name"`
 	Username    string     `json:"username"`
-	Password    string     `json:"password"`
 	NRP         string     `json:"nrp"`
 	CreatedAt   *time.Time `json:"created_at"`
 	CreatedBy   int        `json:"created_by"`

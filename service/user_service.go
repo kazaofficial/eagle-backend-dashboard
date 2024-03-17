@@ -141,6 +141,7 @@ func ConvertUserEntityToDTO(user entity.User) dto.UserResponse {
 	userResponse := dto.UserResponse{
 		ID:          user.ID,
 		UserGroupID: user.UserGroupID,
+		Role:        user.Role,
 		Name:        user.Name,
 		Username:    user.Username,
 		NRP:         user.NRP,

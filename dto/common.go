@@ -31,5 +31,6 @@ type Claims struct {
 	ID          int    `json:"id"`
 	Username    string `json:"username"`
 	UserGroupID int    `json:"user_group_id"`
+	Role        string `json:"role"`
 	jwt.StandardClaims
 }

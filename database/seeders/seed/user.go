@@ -1,4 +1,4 @@
-package main
+package seed
 
 import (
 	"eagle-backend-dashboard/config"
@@ -8,7 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func main() {
+func UserSeeders() {
 	// Membuat koneksi dari config/database.go
 	dbConfig, err := config.NewDatabaseConfig()
 	if err != nil {
@@ -32,6 +32,7 @@ func main() {
 		{
 			ID:          1,
 			UserGroupID: 1,
+			Role:        "admin",
 			Name:        "Super Admin",
 			Username:    "superadmin",
 			Password:    string(hashedPassword),

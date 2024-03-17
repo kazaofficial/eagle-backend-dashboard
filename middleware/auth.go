@@ -51,6 +51,7 @@ func AuthenticationMiddleware() fiber.Handler {
 			c.Locals("id", Claims.ID)
 			c.Locals("username", Claims.Username)
 			c.Locals("user_group_id", Claims.UserGroupID)
+			c.Locals("role", Claims.Role)
 		} else {
 			return c.Status(fiber.StatusUnauthorized).JSON(dto.ErrorResponse{
 				StatusCode: fiber.StatusUnauthorized,

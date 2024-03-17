@@ -1,4 +1,4 @@
-package main
+package seed
 
 import (
 	"eagle-backend-dashboard/config"
@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func main() {
+func UserGroupSeeders() {
 	// Membuat koneksi dari config/database.go
 	dbConfig, err := config.NewDatabaseConfig()
 	if err != nil {

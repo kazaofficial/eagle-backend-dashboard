@@ -38,6 +38,7 @@ func (s *AuthServiceImpl) Login(ctx context.Context, request dto.LoginRequest) (
 		ID:          user.ID,
 		Username:    user.Username,
 		UserGroupID: user.UserGroupID,
+		Role:        user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expired_at,
 		},

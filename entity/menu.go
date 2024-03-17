@@ -5,6 +5,7 @@ import "time"
 type Menu struct {
 	ID          int        `json:"id" gorm:"primaryKey"`
 	ParentID    *int       `json:"parent_id"`
+	UrlKey      string     `json:"url_key"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
 	Icon        string     `json:"icon"`
