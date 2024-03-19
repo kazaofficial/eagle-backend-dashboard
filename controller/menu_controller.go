@@ -18,7 +18,7 @@ func NewMenuRoutes(handler fiber.Router, menuService service.MenuService) {
 	}
 
 	handler.Get("/menu", r.GetMenuByUserGroupID)
-	handler.Get("/menu/:id", r.GetMenuByIDAndUserGroupID)
+	handler.Get("/menu/:url_key", r.GetMenuByIDAndUserGroupID)
 }
 
 func (r *MenuController) GetMenuByUserGroupID(c *fiber.Ctx) error {
@@ -44,17 +44,9 @@ func (r *MenuController) GetMenuByUserGroupID(c *fiber.Ctx) error {
 }
 
 func (r *MenuController) GetMenuByIDAndUserGroupID(c *fiber.Ctx) error {
-	id, err := c.ParamsInt("id")
-	if err != nil {
-		response := dto.ErrorResponse{
-			StatusCode: 400,
-			Message:    "Bad Request, " + err.Error(),
-			Error:      nil,
-		}
-		return c.Status(400).JSON(response)
-	}
+	urlKey := c.Params("url_key")
 	userGroupID := c.Locals("user_group_id").(int)
-	menuResponse, err := r.menuService.GetMenuByIDAndUserGroupID(c.Context(), id, userGroupID)
+	menuResponse, err := r.menuService.GetMenuByUrlKeyAndUserGroupID(c.Context(), urlKey, userGroupID)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{

@@ -32,13 +32,13 @@ func (r *MenuRepositoryImpl) GetMenuByUserGroupID(ctx context.Context, userGroup
 	return menus, nil
 }
 
-func (r *MenuRepositoryImpl) GetMenuByIDAndUserGroupID(ctx context.Context, id int, userGroupID int) (*entity.Menu, error) {
+func (r *MenuRepositoryImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Context, urlKey string, userGroupID int) (*entity.Menu, error) {
 	var menu entity.Menu
 	// menu join to user_group_menu
 	err := r.db.
 		Joins("JOIN user_group_menus ON menus.id = user_group_menus.menu_id").
 		Where("user_group_menus.user_group_id = ?", userGroupID).
-		Where("menus.id = ?", id).
+		Where("menus.url_key = ?", urlKey).
 		Where("menus.id != ?", 1).
 		// preload submenus with join
 		Preload("SubMenus", func(db *gorm.DB) *gorm.DB {

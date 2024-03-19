@@ -85,6 +85,7 @@ func MenuSeeders() {
 			Description: "360 Profil menu",
 			ParentID:    &laporanID,
 			Url:         "/laporan/360-profil/360-profil",
+			Icon:        "ic:round-360",
 		},
 		{
 			ID:          7,
@@ -93,6 +94,7 @@ func MenuSeeders() {
 			Description: "Penyediaan menu",
 			ParentID:    &laporanID,
 			Url:         "/laporan/penyediaan/penyediaan",
+			Icon:        "majesticons:box",
 		},
 		{
 			ID:          8,
@@ -101,6 +103,7 @@ func MenuSeeders() {
 			Description: "Pendidikan menu",
 			ParentID:    &laporanID,
 			Url:         "/laporan/pendidikan/pendidikan",
+			Icon:        "material-symbols:history-edu",
 		},
 		{
 			ID:          9,
@@ -109,6 +112,7 @@ func MenuSeeders() {
 			Description: "Penggunaan menu",
 			ParentID:    &laporanID,
 			Url:         "/laporan/penggunaan/penggunaan",
+			Icon:        "material-symbols:note-stack",
 		},
 		{
 			ID:          10,
@@ -117,6 +121,7 @@ func MenuSeeders() {
 			Description: "Perawatan menu",
 			ParentID:    &laporanID,
 			Url:         "/laporan/perawatan/perawatan",
+			Icon:        "fluent:slide-settings-24-filled",
 		},
 		{
 			ID:          11,
@@ -125,6 +130,7 @@ func MenuSeeders() {
 			Description: "Pemisahan menu",
 			ParentID:    &laporanID,
 			Url:         "/laporan/pemisahan/pemisahan",
+			Icon:        "ant-design:split-cells-outlined",
 		},
 		{
 			ID:          12,
@@ -133,6 +139,7 @@ func MenuSeeders() {
 			Description: "Data DSP menu",
 			ParentID:    &laporanID,
 			Url:         "/laporan/data-dsp",
+			Icon:        "tabler:binary-tree",
 		},
 		{
 			ID:          13,
@@ -141,6 +148,7 @@ func MenuSeeders() {
 			Description: "Koneksi ke Sumber Data menu",
 			ParentID:    &manajemenDataProsesID,
 			Url:         "/manajemen-data-proses/koneksi-ke-sumber-data/tambah-koneksi",
+			Icon:        "majesticons:data",
 		},
 		{
 			ID:          14,
@@ -149,6 +157,7 @@ func MenuSeeders() {
 			Description: "Penarikan Data menu",
 			ParentID:    &manajemenDataProsesID,
 			Url:         "/manajemen-data-proses/penarikan-data/penarikan-data",
+			Icon:        "fluent:arrow-sync-circle-24-filled",
 		},
 		{
 			ID:          15,
@@ -157,6 +166,7 @@ func MenuSeeders() {
 			Description: "Pemrosesan Data menu",
 			ParentID:    &manajemenDataProsesID,
 			Url:         "/manajemen-data-proses/pemrosesan-data/pemrosesan-data",
+			Icon:        "fluent:slide-settings-24-filled",
 		},
 		{
 			ID:          16,
@@ -164,6 +174,8 @@ func MenuSeeders() {
 			Description: "Query Data menu",
 			ParentID:    &olahDataID,
 			UrlKey:      "olah-data,query-data",
+			Url:         "/olah-data/query-data",
+			Icon:        "mdi:sql-query",
 		},
 		{
 			ID:          17,
@@ -171,6 +183,8 @@ func MenuSeeders() {
 			Description: "Input Data menu",
 			ParentID:    &olahDataID,
 			UrlKey:      "olah-data,input-data",
+			Url:         "/olah-data/input-data",
+			Icon:        "lucide:folder-input",
 		},
 		{
 			ID:          18,
@@ -178,6 +192,8 @@ func MenuSeeders() {
 			Description: "Lineage menu",
 			ParentID:    &pemantauanSistemID,
 			UrlKey:      "pemantauan-sistem,lineage",
+			Url:         "/pemantauan-sistem/lineage",
+			Icon:        "fa6-solid:user-group",
 		},
 		{
 			ID:          19,
@@ -185,6 +201,8 @@ func MenuSeeders() {
 			Description: "Services menu",
 			ParentID:    &pemantauanSistemID,
 			UrlKey:      "pemantauan-sistem,services",
+			Url:         "/pemantauan-sistem/services",
+			Icon:        "ri:customer-service-2-fill",
 		},
 		{
 			ID:          20,
@@ -192,6 +210,8 @@ func MenuSeeders() {
 			Description: "360 Profil menu",
 			ParentID:    &n360ProfilID,
 			UrlKey:      "laporan,360-profil,360-profil",
+			Url:         "/laporan/360-profil/360-profil",
+			Icon:        "ic:round-360",
 		},
 		{
 			ID:          21,
@@ -199,6 +219,8 @@ func MenuSeeders() {
 			Description: "Admin 360 Profil menu",
 			ParentID:    &n360ProfilID,
 			UrlKey:      "laporan,360-profil,admin-360-profil",
+			Url:         "/laporan/360-profil/admin-360-profil",
+			Icon:        "ic:round-360",
 		},
 		{
 			ID:          22,
@@ -206,6 +228,7 @@ func MenuSeeders() {
 			Description: "Penyediaan menu",
 			ParentID:    &penyediaanID,
 			UrlKey:      "laporan,penyediaan,penyediaan",
+			Icon:        "majesticons:box",
 		},
 		{
 			ID:          23,
@@ -213,6 +236,7 @@ func MenuSeeders() {
 			Description: "Admin Penyediaan menu",
 			ParentID:    &penyediaanID,
 			UrlKey:      "laporan,penyediaan,admin-penyediaan",
+			Icon:        "majesticons:box",
 		},
 		{
 			ID:          24,
@@ -220,6 +244,7 @@ func MenuSeeders() {
 			Description: "Pendidikan menu",
 			ParentID:    &pendidikanID,
 			UrlKey:      "laporan,pendidikan,pendidikan",
+			Icon:        "material-symbols:history-edu",
 		},
 		{
 			ID:          25,
@@ -227,6 +252,7 @@ func MenuSeeders() {
 			Description: "Admin Pendidikan menu",
 			ParentID:    &pendidikanID,
 			UrlKey:      "laporan,pendidikan,admin-pendidikan",
+			Icon:        "material-symbols:history-edu",
 		},
 		{
 			ID:          26,
@@ -234,6 +260,7 @@ func MenuSeeders() {
 			Description: "Penggunaan menu",
 			ParentID:    &penggunaanID,
 			UrlKey:      "laporan,penggunaan,penggunaan",
+			Icon:        "material-symbols:note-stack",
 		},
 		{
 			ID:          27,
@@ -241,6 +268,7 @@ func MenuSeeders() {
 			Description: "Admin Penggunaan menu",
 			ParentID:    &penggunaanID,
 			UrlKey:      "laporan,penggunaan,admin-penggunaan",
+			Icon:        "material-symbols:note-stack",
 		},
 		{
 			ID:          28,
@@ -248,6 +276,7 @@ func MenuSeeders() {
 			Description: "Perawatan menu",
 			ParentID:    &perawatanID,
 			UrlKey:      "laporan,perawatan,perawatan",
+			Icon:        "fluent:slide-settings-24-filled",
 		},
 		{
 			ID:          29,
@@ -255,6 +284,7 @@ func MenuSeeders() {
 			Description: "Admin Perawatan menu",
 			ParentID:    &perawatanID,
 			UrlKey:      "laporan,perawatan,admin-perawatan",
+			Icon:        "fluent:slide-settings-24-filled",
 		},
 		{
 			ID:          30,
@@ -262,6 +292,7 @@ func MenuSeeders() {
 			Description: "Pemisahan menu",
 			ParentID:    &pemisahanID,
 			UrlKey:      "laporan,pemisahan,pemisahan",
+			Icon:        "ant-design:split-cells-outlined",
 		},
 		{
 			ID:          31,
@@ -269,6 +300,7 @@ func MenuSeeders() {
 			Description: "Admin Pemisahan menu",
 			ParentID:    &pemisahanID,
 			UrlKey:      "laporan,pemisahan,admin-pemisahan",
+			Icon:        "ant-design:split-cells-outlined",
 		},
 		{
 			ID:          32,
@@ -276,6 +308,7 @@ func MenuSeeders() {
 			Description: "Tambah Koneksi menu",
 			ParentID:    &koneksiKeSumberDataID,
 			UrlKey:      "manajemen-data-proses,koneksi-ke-sumber-data,tambah-koneksi",
+			Icon:        "majesticons:data",
 		},
 		{
 			ID:          33,
@@ -283,6 +316,7 @@ func MenuSeeders() {
 			Description: "Ubah Koneksi menu",
 			ParentID:    &koneksiKeSumberDataID,
 			UrlKey:      "manajemen-data-proses,koneksi-ke-sumber-data,ubah-koneksi",
+			Icon:        "majesticons:data",
 		},
 		{
 			ID:          34,
@@ -290,6 +324,7 @@ func MenuSeeders() {
 			Description: "Tambah Penarikan Data menu",
 			ParentID:    &penarikanDataID,
 			UrlKey:      "manajemen-data-proses,penarikan-data,tambah-penarikan-data",
+			Icon:        "fluent:arrow-sync-circle-24-filled",
 		},
 		{
 			ID:          35,
@@ -297,6 +332,7 @@ func MenuSeeders() {
 			Description: "Ubah Penarikan Data menu",
 			ParentID:    &penarikanDataID,
 			UrlKey:      "manajemen-data-proses,penarikan-data,ubah-penarikan-data",
+			Icon:        "fluent:arrow-sync-circle-24-filled",
 		},
 		{
 			ID:          36,
@@ -304,6 +340,7 @@ func MenuSeeders() {
 			Description: "Tambah Pemrosesan Data menu",
 			ParentID:    &pemrosesanDataID,
 			UrlKey:      "manajemen-data-proses,pemrosesan-data,tambah-pemrosesan-data",
+			Icon:        "fluent:slide-settings-24-filled",
 		},
 		{
 			ID:          37,
@@ -311,6 +348,7 @@ func MenuSeeders() {
 			Description: "Ubah Pemrosesan Data menu",
 			ParentID:    &pemrosesanDataID,
 			UrlKey:      "manajemen-data-proses,pemrosesan-data,ubah-pemrosesan-data",
+			Icon:        "fluent:slide-settings-24-filled",
 		},
 	}
 

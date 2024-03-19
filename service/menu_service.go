@@ -31,8 +31,8 @@ func (service *MenuServiceImpl) GetMenuByUserGroupID(ctx context.Context, userGr
 	return menuResponses, nil
 }
 
-func (service *MenuServiceImpl) GetMenuByIDAndUserGroupID(ctx context.Context, id int, userGroupID int) (*dto.MenuResponse, error) {
-	menu, err := service.menuRepository.GetMenuByIDAndUserGroupID(ctx, id, userGroupID)
+func (service *MenuServiceImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Context, urlKey string, userGroupID int) (*dto.MenuResponse, error) {
+	menu, err := service.menuRepository.GetMenuByUrlKeyAndUserGroupID(ctx, urlKey, userGroupID)
 	if err != nil {
 		return nil, err
 	}
@@ -50,6 +50,7 @@ func ConverMenuEntityToDTO(entity entity.Menu) dto.MenuResponse {
 		ID:          entity.ID,
 		Name:        entity.Name,
 		ParentID:    entity.ParentID,
+		UrlKey:      entity.UrlKey,
 		Description: entity.Description,
 		Icon:        entity.Icon,
 		Url:         entity.Url,

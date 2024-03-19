@@ -52,5 +52,18 @@ func (s *AuthServiceImpl) Login(ctx context.Context, request dto.LoginRequest) (
 	return &dto.LoginResponse{
 		AccessToken: tokenString,
 		ExpiredAt:   expired_at,
+		User: dto.UserResponse{
+			ID:          user.ID,
+			Username:    user.Username,
+			UserGroupID: user.UserGroupID,
+			Role:        user.Role,
+			Name:        user.Name,
+			NRP:         user.NRP,
+			CreatedAt:   user.CreatedAt,
+			CreatedBy:   user.CreatedBy,
+			UpdatedAt:   user.UpdatedAt,
+			UpdatedBy:   user.UpdatedBy,
+			DeletedAt:   user.DeletedAt,
+		},
 	}, nil
 }
