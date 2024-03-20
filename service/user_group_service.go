@@ -28,6 +28,7 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 
 	if request.Page != nil {
 		page = *request.Page
+		offset = (page - 1) * limit
 	}
 
 	if request.Limit != nil {
@@ -56,7 +57,7 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 
 	userGroupResponses := []dto.UserGroupResponse{}
 	for _, userGroup := range userGroups {
-		userGroupResponses = append(userGroupResponses, ConverUserGroupEntityToDTO(userGroup))
+		userGroupResponses = append(userGroupResponses, ConvertUserGroupEntityToDTO(userGroup))
 	}
 
 	pagination := dto.Pagination{
@@ -76,7 +77,7 @@ func (service *UserGroupServiceImpl) GetUserGroupByID(ctx context.Context, id in
 		return nil, err
 	}
 
-	userGroupResponse := ConverUserGroupEntityToDTO(*userGroup)
+	userGroupResponse := ConvertUserGroupEntityToDTO(*userGroup)
 	return &userGroupResponse, nil
 }
 
@@ -91,7 +92,7 @@ func (service *UserGroupServiceImpl) CreateUserGroup(ctx context.Context, reques
 		return nil, err
 	}
 
-	userGroupResponse := ConverUserGroupEntityToDTO(userGroup)
+	userGroupResponse := ConvertUserGroupEntityToDTO(userGroup)
 	return &userGroupResponse, nil
 }
 
@@ -109,7 +110,7 @@ func (service *UserGroupServiceImpl) UpdateUserGroup(ctx context.Context, id int
 		return nil, err
 	}
 
-	userGroupResponse := ConverUserGroupEntityToDTO(*userGroup)
+	userGroupResponse := ConvertUserGroupEntityToDTO(*userGroup)
 	return &userGroupResponse, nil
 }
 
@@ -127,11 +128,11 @@ func (service *UserGroupServiceImpl) DeleteUserGroup(ctx context.Context, id int
 		return nil, err
 	}
 
-	userGroupResponse := ConverUserGroupEntityToDTO(*userGroup)
+	userGroupResponse := ConvertUserGroupEntityToDTO(*userGroup)
 	return &userGroupResponse, nil
 }
 
-func ConverUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
+func ConvertUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupResponse {
 	userGroupResponse := dto.UserGroupResponse{
 		ID:            userGroup.ID,
 		Name:          userGroup.Name,

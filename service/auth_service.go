@@ -32,6 +32,14 @@ func (s *AuthServiceImpl) Login(ctx context.Context, request dto.LoginRequest) (
 		return nil, err
 	}
 
+	lastLogin := time.Now()
+	user.LastLogin = &lastLogin
+
+	err = s.userRepository.UpdateUser(ctx, user)
+	if err != nil {
+		return nil, err
+	}
+
 	// create token
 	expired_at := time.Now().Add(time.Hour * 24).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, dto.Claims{

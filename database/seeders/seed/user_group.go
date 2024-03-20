@@ -27,6 +27,11 @@ func UserGroupSeeders() {
 			Name:        "Admin",
 			Description: "Admin user group",
 		},
+		{
+			ID:          2,
+			Name:        "User",
+			Description: "User user group",
+		},
 	}
 
 	for _, userGroup := range userGroups {

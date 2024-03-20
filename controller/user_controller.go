@@ -118,6 +118,8 @@ func (controller *UserController) CreateUser(c *fiber.Ctx) error {
 
 	ctx := c.Context()
 	err := c.BodyParser(&request)
+	userID := c.Locals("id").(int)
+
 	if err != nil {
 		response := dto.ErrorResponse{
 			StatusCode: 400,
@@ -145,7 +147,7 @@ func (controller *UserController) CreateUser(c *fiber.Ctx) error {
 		}
 	}
 
-	user, err := controller.userService.CreateUser(ctx, &request)
+	user, err := controller.userService.CreateUser(ctx, userID, &request)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -178,6 +180,7 @@ func (controller *UserController) UpdateUser(c *fiber.Ctx) error {
 	var request dto.UserUpdateRequest
 
 	ctx := c.Context()
+	userID := c.Locals("id").(int)
 	err = c.BodyParser(&request)
 	if err != nil {
 		response := dto.ErrorResponse{
@@ -206,7 +209,7 @@ func (controller *UserController) UpdateUser(c *fiber.Ctx) error {
 		}
 	}
 
-	user, err := controller.userService.UpdateUser(ctx, id, false, &request)
+	user, err := controller.userService.UpdateUser(ctx, id, false, userID, &request)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -312,7 +315,7 @@ func (controller *UserController) UpdateMe(c *fiber.Ctx) error {
 		}
 	}
 
-	user, err := controller.userService.UpdateUser(ctx, id, true, &request)
+	user, err := controller.userService.UpdateUser(ctx, id, true, id, &request)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{

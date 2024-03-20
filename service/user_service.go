@@ -5,6 +5,7 @@ import (
 	"eagle-backend-dashboard/dto"
 	"eagle-backend-dashboard/entity"
 	"eagle-backend-dashboard/repository"
+	"math"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
@@ -26,12 +27,13 @@ func (service *UserServiceImpl) GetUser(ctx context.Context, request *dto.UserLi
 	limit := 10
 	sort := "id desc"
 
-	if request.Page != nil {
-		page = *request.Page
-	}
-
 	if request.Limit != nil {
 		limit = *request.Limit
+	}
+
+	if request.Page != nil {
+		page = *request.Page
+		offset = (page - 1) * limit
 	}
 
 	if request.Sort != "" {
@@ -59,7 +61,7 @@ func (service *UserServiceImpl) GetUser(ctx context.Context, request *dto.UserLi
 		Limit:     limit,
 		Total:     len(userResponses),
 		TotalData: countUsers,
-		TotalPage: countUsers/limit + 1,
+		TotalPage: int(math.Ceil(float64(countUsers) / float64(limit))),
 	}
 
 	return userResponses, &pagination, nil
@@ -74,7 +76,7 @@ func (service *UserServiceImpl) GetUserByID(ctx context.Context, id int, me bool
 	return &userResponse, nil
 }
 
-func (service *UserServiceImpl) CreateUser(ctx context.Context, request *dto.UserRequest) (*dto.UserResponse, error) {
+func (service *UserServiceImpl) CreateUser(ctx context.Context, userID int, request *dto.UserRequest) (*dto.UserResponse, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
@@ -85,6 +87,8 @@ func (service *UserServiceImpl) CreateUser(ctx context.Context, request *dto.Use
 		Username:    request.Username,
 		Password:    string(hashedPassword),
 		NRP:         request.NRP,
+		CreatedBy:   userID,
+		UpdatedBy:   userID,
 	}
 	err = service.UserRepository.CreateUser(ctx, &user)
 	if err != nil {
@@ -95,7 +99,7 @@ func (service *UserServiceImpl) CreateUser(ctx context.Context, request *dto.Use
 	return &userResponse, nil
 }
 
-func (service *UserServiceImpl) UpdateUser(ctx context.Context, id int, me bool, request *dto.UserUpdateRequest) (*dto.UserResponse, error) {
+func (service *UserServiceImpl) UpdateUser(ctx context.Context, id int, me bool, userID int, request *dto.UserUpdateRequest) (*dto.UserResponse, error) {
 	user, err := service.UserRepository.GetUserByID(ctx, id, me)
 	if err != nil {
 		return nil, err
@@ -112,6 +116,8 @@ func (service *UserServiceImpl) UpdateUser(ctx context.Context, id int, me bool,
 	if request.NRP != "" {
 		user.NRP = request.NRP
 	}
+
+	user.UpdatedBy = userID
 
 	err = service.UserRepository.UpdateUser(ctx, user)
 	if err != nil {
@@ -138,6 +144,7 @@ func (service *UserServiceImpl) DeleteUser(ctx context.Context, id int) (*dto.Us
 }
 
 func ConvertUserEntityToDTO(user entity.User) dto.UserResponse {
+
 	userResponse := dto.UserResponse{
 		ID:          user.ID,
 		UserGroupID: user.UserGroupID,
@@ -145,9 +152,23 @@ func ConvertUserEntityToDTO(user entity.User) dto.UserResponse {
 		Name:        user.Name,
 		Username:    user.Username,
 		NRP:         user.NRP,
+		LastLogin:   user.LastLogin,
 		CreatedAt:   user.CreatedAt,
+		CreatedBy:   user.CreatedBy,
 		UpdatedAt:   user.UpdatedAt,
+		UpdatedBy:   user.UpdatedBy,
 		DeletedAt:   user.DeletedAt,
+	}
+	if user.UserGroup != nil {
+		userGroup := ConvertUserGroupEntityToDTO(*user.UserGroup)
+		userResponse.UserGroup = &userGroup
+	}
+	if user.CreatedByUser != nil {
+		createdByUser := dto.UserResponse{
+			ID:   user.CreatedByUser.ID,
+			Name: user.CreatedByUser.Name,
+		}
+		userResponse.CreatedByUser = &createdByUser
 	}
 	return userResponse
 }

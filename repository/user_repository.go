@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"eagle-backend-dashboard/entity"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -29,7 +30,7 @@ func (r *UserRepositoryImpl) GetUser(ctx context.Context, limit *int, offset *in
 	if sort != nil {
 		query = query.Order(*sort)
 	}
-	query = query.Where("id != ?", 1)
+	query = query.Where("id != ?", 1).Preload("UserGroup").Preload("CreatedByUser")
 	err := query.Find(&users).Error
 	if err != nil {
 		return users, err
@@ -61,7 +62,7 @@ func (r *UserRepositoryImpl) GetUserByID(ctx context.Context, id int, me bool) (
 	if !me {
 		query = query.Where("id != ?", 1)
 	}
-	err := query.Where("id = ?", id).First(&user).Error
+	err := query.Where("id = ?", id).Preload("UserGroup").First(&user).Error
 	if err != nil {
 		return &user, err
 	}
@@ -71,6 +72,9 @@ func (r *UserRepositoryImpl) GetUserByID(ctx context.Context, id int, me bool) (
 func (r *UserRepositoryImpl) CreateUser(ctx context.Context, user *entity.User) error {
 	err := r.db.Create(&user).Error
 	if err != nil {
+		if err == gorm.ErrDuplicatedKey {
+			log.Println("Error: ", err)
+		}
 		return err
 	}
 	return nil
