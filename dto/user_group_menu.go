@@ -12,3 +12,8 @@ type UserGroupMenuResponse struct {
 	CreatedAt   *time.Time `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`
 }
+
+type UserGroupMenuRequest struct {
+	UserGroupID int   `json:"user_group_id" validate:"required"`
+	MenuIDs     []int `json:"menu_ids" validate:"required"`
+}

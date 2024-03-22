@@ -5,14 +5,15 @@ import "time"
 type MenuResponse struct {
 	ID          int            `json:"id"`
 	ParentID    *int           `json:"parent_id"`
-	UrlKey      string         `json:"url_key"`
+	UrlKey      string         `json:"url_key,omitempty"`
 	Name        string         `json:"name"`
-	Description string         `json:"description"`
-	Icon        string         `json:"icon"`
-	Url         string         `json:"url"`
+	Description string         `json:"description,omitempty"`
+	Icon        string         `json:"icon,omitempty"`
+	Url         string         `json:"url,omitempty"`
 	SubMenus    []MenuResponse `json:"sub_menus"`
-	CreatedAt   *time.Time     `json:"created_at"`
-	UpdatedAt   *time.Time     `json:"updated_at"`
+	IsActive    *bool          `json:"is_active,omitempty"`
+	CreatedAt   *time.Time     `json:"created_at,omitempty"`
+	UpdatedAt   *time.Time     `json:"updated_at,omitempty"`
 }
 
 type MenuRequest struct {

@@ -25,7 +25,7 @@ func (service *MenuServiceImpl) GetMenuByUserGroupID(ctx context.Context, userGr
 
 	menuResponses := []dto.MenuResponse{}
 	for _, menu := range menus {
-		menuResponses = append(menuResponses, ConverMenuEntityToDTO(menu))
+		menuResponses = append(menuResponses, ConvertMenuEntityToDTO(menu))
 	}
 
 	return menuResponses, nil
@@ -37,15 +37,22 @@ func (service *MenuServiceImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Contex
 		return nil, err
 	}
 
-	menuResponse := ConverMenuEntityToDTO(*menu)
+	menuResponse := ConvertMenuWithSubMenusEntityToDTO(*menu)
 	return &menuResponse, nil
 }
 
-func ConverMenuEntityToDTO(entity entity.Menu) dto.MenuResponse {
+func ConvertMenuWithSubMenusEntityToDTO(entity entity.MenuWithSubMenus) dto.MenuResponse {
 	subMenus := []dto.MenuResponse{}
 	for _, subMenu := range entity.SubMenus {
-		subMenus = append(subMenus, ConverMenuEntityToDTO(subMenu))
+		subMenus = append(subMenus, ConvertMenuWithSubMenusEntityToDTO(subMenu))
 	}
+
+	newMenu := ConvertMenuEntityToDTO(entity.Menu)
+	newMenu.SubMenus = subMenus
+	return newMenu
+}
+
+func ConvertMenuEntityToDTO(entity entity.Menu) dto.MenuResponse {
 	return dto.MenuResponse{
 		ID:          entity.ID,
 		Name:        entity.Name,
@@ -54,7 +61,6 @@ func ConverMenuEntityToDTO(entity entity.Menu) dto.MenuResponse {
 		Description: entity.Description,
 		Icon:        entity.Icon,
 		Url:         entity.Url,
-		SubMenus:    subMenus,
 		CreatedAt:   entity.CreatedAt,
 		UpdatedAt:   entity.UpdatedAt,
 	}

@@ -1,12 +1,13 @@
 package entity
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type User struct {
-	ID            int            `gorm:"primary_key" json:"id,omitempty"`
+	ID            int            `gorm:"primary_key,omitempty" json:"id,omitempty"`
 	UserGroupID   int            `json:"user_group_id"`
 	UserGroup     *UserGroup     `json:"group" gorm:"foreignKey:UserGroupID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 	Role          string         `json:"role" gorm:"default:'user'"`

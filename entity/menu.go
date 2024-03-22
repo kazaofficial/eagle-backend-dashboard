@@ -10,9 +10,19 @@ type Menu struct {
 	Description string     `json:"description"`
 	Icon        string     `json:"icon"`
 	Url         string     `json:"url"`
-	SubMenus    []Menu     `json:"sub_menus" gorm:"foreignKey:ParentID"`
 	CreatedAt   *time.Time `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`
+}
+
+type MenuWithSubMenus struct {
+	Menu
+	SubMenus []MenuWithSubMenus `json:"sub_menus" gorm:"foreignKey:ParentID"`
+}
+
+type MenuWithUserGroup struct {
+	Menu
+	UserGroupID *int                `json:"user_group_id" gorm:"->"`
+	SubMenus    []MenuWithUserGroup `json:"sub_menus" gorm:"foreignKey:ParentID"`
 }
 
 // TableName returns the table name of the Menu

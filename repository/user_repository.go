@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"eagle-backend-dashboard/entity"
-	"log"
 
 	"gorm.io/gorm"
 )
@@ -72,9 +71,6 @@ func (r *UserRepositoryImpl) GetUserByID(ctx context.Context, id int, me bool) (
 func (r *UserRepositoryImpl) CreateUser(ctx context.Context, user *entity.User) error {
 	err := r.db.Create(&user).Error
 	if err != nil {
-		if err == gorm.ErrDuplicatedKey {
-			log.Println("Error: ", err)
-		}
 		return err
 	}
 	return nil

@@ -5,6 +5,7 @@ import (
 	"eagle-backend-dashboard/dto"
 	"eagle-backend-dashboard/entity"
 	"eagle-backend-dashboard/repository"
+	"fmt"
 )
 
 type userGroupMenuServiceImpl struct {
@@ -30,6 +31,30 @@ func (s *userGroupMenuServiceImpl) GetUserGroupMenuByParentIDAndUserID(ctx conte
 	}
 
 	return userGroupMenuResponses, nil
+}
+
+func (s *userGroupMenuServiceImpl) CreateManyUserGroupMenu(ctx context.Context, request dto.UserGroupMenuRequest) error {
+	userGroupMenus := []entity.UserGroupMenu{}
+	for _, menuID := range request.MenuIDs {
+		// check if user group menu already exists
+		userGroupMenu, _ := s.userGroupMenuRepository.GetByUserGroupIDAndMenuID(ctx, request.UserGroupID, menuID)
+		if userGroupMenu == nil {
+			userGroupMenu := entity.UserGroupMenu{
+				UserGroupID: request.UserGroupID,
+				MenuID:      menuID,
+			}
+			userGroupMenus = append(userGroupMenus, userGroupMenu)
+		}
+	}
+
+	if len(userGroupMenus) == 0 {
+		return fmt.Errorf("All user group menu already exists")
+	}
+	return s.userGroupMenuRepository.CreateManyUserGroupMenu(ctx, userGroupMenus)
+}
+
+func (s *userGroupMenuServiceImpl) DeleteManyUserGroupMenu(ctx context.Context, request dto.UserGroupMenuRequest) error {
+	return s.userGroupMenuRepository.DeleteManyUserGroupMenuByUserGroupIDAndMenuIDs(ctx, request.UserGroupID, request.MenuIDs)
 }
 
 func ConvertUserGroupMenuResponseFromEntity(userGroupMenu entity.UserGroupMenu) dto.UserGroupMenuResponse {

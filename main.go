@@ -83,7 +83,7 @@ func main() {
 	userGroupMenuRepository := repository.NewUserGroupMenuRepository(db)
 
 	// initialize services
-	userGroupService := service.NewUserGroupService(userGroupRepository)
+	userGroupService := service.NewUserGroupService(userGroupRepository, menuRepository)
 	menuService := service.NewMenuService(menuRepository)
 	authService := service.NewAuthService(userRepository)
 	userService := service.NewUserService(userRepository)

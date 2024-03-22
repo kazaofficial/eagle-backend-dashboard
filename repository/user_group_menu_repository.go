@@ -30,3 +30,20 @@ func (r *UserGroupMenuRepositoryImpl) GetUserGroupMenuByParentIDAndUserID(ctx co
 	}
 	return userGroupMenus, nil
 }
+
+func (r *UserGroupMenuRepositoryImpl) GetByUserGroupIDAndMenuID(ctx context.Context, userGroupID int, menuID int) (*entity.UserGroupMenu, error) {
+	var userGroupMenu entity.UserGroupMenu
+	err := r.db.Where("user_group_id = ? AND menu_id = ?", userGroupID, menuID).First(&userGroupMenu).Error
+	if err != nil {
+		return nil, err
+	}
+	return &userGroupMenu, nil
+}
+
+func (r *UserGroupMenuRepositoryImpl) CreateManyUserGroupMenu(ctx context.Context, userGroupMenus []entity.UserGroupMenu) error {
+	return r.db.Create(&userGroupMenus).Error
+}
+
+func (r *UserGroupMenuRepositoryImpl) DeleteManyUserGroupMenuByUserGroupIDAndMenuIDs(ctx context.Context, userGroupID int, menuIDs []int) error {
+	return r.db.Where("user_group_id = ? AND menu_id IN (?)", userGroupID, menuIDs).Delete(&entity.UserGroupMenu{}).Error
+}

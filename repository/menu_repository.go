@@ -32,8 +32,8 @@ func (r *MenuRepositoryImpl) GetMenuByUserGroupID(ctx context.Context, userGroup
 	return menus, nil
 }
 
-func (r *MenuRepositoryImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Context, urlKey string, userGroupID int) (*entity.Menu, error) {
-	var menu entity.Menu
+func (r *MenuRepositoryImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Context, urlKey string, userGroupID int) (*entity.MenuWithSubMenus, error) {
+	var menu entity.MenuWithSubMenus
 	// menu join to user_group_menu
 	err := r.db.
 		Joins("JOIN user_group_menus ON menus.id = user_group_menus.menu_id").
@@ -55,4 +55,32 @@ func (r *MenuRepositoryImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Context, 
 		return nil, err
 	}
 	return &menu, nil
+}
+
+func (r *MenuRepositoryImpl) GetMenuAccessByUserGroupID(ctx context.Context, userGroupID int) ([]entity.MenuWithUserGroup, error) {
+	var menu []entity.MenuWithUserGroup
+	// menu join to user_group_menu
+	err := r.db.
+		Select("menus.*, user_group_menus.user_group_id as user_group_id").
+		Joins("LEFT JOIN user_group_menus ON menus.id = user_group_menus.menu_id AND user_group_menus.user_group_id = ?", userGroupID).
+		Where("menus.id != ?", 1).
+		Where("menus.parent_id = ?", 1).
+		// preload submenus with join
+		Preload("SubMenus", func(db *gorm.DB) *gorm.DB {
+			return db.Select("menus.*, user_group_menus.user_group_id as user_group_id").
+				Joins("LEFT JOIN user_group_menus ON menus.id = user_group_menus.menu_id AND user_group_menus.user_group_id = ?", userGroupID).
+				Order("menus.id ASC")
+		}).
+		Preload("SubMenus.SubMenus", func(db *gorm.DB) *gorm.DB {
+			return db.Select("menus.*, user_group_menus.user_group_id as user_group_id").
+				Joins("LEFT JOIN user_group_menus ON menus.id = user_group_menus.menu_id AND user_group_menus.user_group_id = ?", userGroupID).
+				Order("menus.id ASC")
+		}).
+		Order("menus.id ASC").
+		Find(&menu).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return menu, nil
 }

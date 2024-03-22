@@ -12,12 +12,14 @@ import (
 // UserGroupServiceImpl implements the UserGroupService interface.
 type UserGroupServiceImpl struct {
 	userGroupRepository repository.UserGroupRepository
+	menuRepository      repository.MenuRepository
 }
 
 // NewUserGroupService creates a new UserGroupService.
-func NewUserGroupService(userGroupRepository repository.UserGroupRepository) UserGroupService {
+func NewUserGroupService(userGroupRepository repository.UserGroupRepository, menuRepository repository.MenuRepository) UserGroupService {
 	return &UserGroupServiceImpl{
 		userGroupRepository: userGroupRepository,
+		menuRepository:      menuRepository,
 	}
 }
 
@@ -33,10 +35,6 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 
 	if request.Limit != nil {
 		limit = *request.Limit
-	}
-
-	if page > 1 {
-		offset = (page - 1) * limit
 	}
 
 	sort := "id desc"
@@ -57,6 +55,56 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 
 	userGroupResponses := []dto.UserGroupResponse{}
 	for _, userGroup := range userGroups {
+		userGroupResponses = append(userGroupResponses, ConvertUserGroupEntityToDTO(userGroup))
+	}
+
+	pagination := dto.Pagination{
+		Page:      page,
+		Limit:     limit,
+		Total:     len(userGroups),
+		TotalData: countUserGroups,
+		TotalPage: countUserGroups/limit + 1,
+	}
+
+	return userGroupResponses, &pagination, nil
+}
+
+func (service *UserGroupServiceImpl) GetUserGroupWithAccess(ctx context.Context, request *dto.UserGroupListRequest) ([]dto.UserGroupResponse, *dto.Pagination, error) {
+	offset := 0
+	page := 1
+	limit := 10
+
+	if request.Page != nil {
+		page = *request.Page
+		offset = (page - 1) * limit
+	}
+
+	if request.Limit != nil {
+		limit = *request.Limit
+	}
+
+	sort := "id desc"
+	if request.Sort != "" {
+		sort = request.Sort
+		sort = strings.ReplaceAll(sort, ".", " ")
+	}
+
+	userGroups, err := service.userGroupRepository.GetUserGroup(ctx, &limit, &offset, &sort)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	countUserGroups, err := service.userGroupRepository.CountUserGroup(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	userGroupResponses := []dto.UserGroupResponse{}
+	for _, userGroup := range userGroups {
+		menus, err := service.menuRepository.GetMenuAccessByUserGroupID(ctx, userGroup.ID)
+		if err == nil {
+			userGroup.Menus = menus
+		}
 		userGroupResponses = append(userGroupResponses, ConvertUserGroupEntityToDTO(userGroup))
 	}
 
@@ -143,5 +191,34 @@ func ConvertUserGroupEntityToDTO(userGroup entity.UserGroup) dto.UserGroupRespon
 		DeletedAt:     userGroup.DeletedAt,
 	}
 
+	if userGroup.Menus != nil {
+		menus := []dto.MenuResponse{}
+		for _, menu := range userGroup.Menus {
+			menus = append(menus, ConverUserGroupMenuEntityToDTO(menu))
+		}
+		userGroupResponse.Menus = menus
+	}
+
 	return userGroupResponse
+}
+
+func ConverUserGroupMenuEntityToDTO(entity entity.MenuWithUserGroup) dto.MenuResponse {
+	subMenus := []dto.MenuResponse{}
+	for _, subMenu := range entity.SubMenus {
+		subMenus = append(subMenus, ConverUserGroupMenuEntityToDTO(subMenu))
+	}
+
+	isActive := false
+	newMenu := dto.MenuResponse{
+		ID:       entity.ID,
+		Name:     entity.Name,
+		ParentID: entity.ParentID,
+		SubMenus: subMenus,
+		IsActive: &isActive,
+	}
+	if entity.UserGroupID != nil {
+		isActive = true
+		newMenu.IsActive = &isActive
+	}
+	return newMenu
 }
