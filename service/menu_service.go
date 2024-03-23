@@ -31,6 +31,20 @@ func (service *MenuServiceImpl) GetMenuByUserGroupID(ctx context.Context, userGr
 	return menuResponses, nil
 }
 
+func (service *MenuServiceImpl) GetMainMenu(ctx context.Context) ([]dto.MenuResponse, error) {
+	menus, err := service.menuRepository.GetMainMenu(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	menuResponses := []dto.MenuResponse{}
+	for _, menu := range menus {
+		menuResponses = append(menuResponses, ConvertMenuEntityToDTO(menu))
+	}
+
+	return menuResponses, nil
+}
+
 func (service *MenuServiceImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Context, urlKey string, userGroupID int) (*dto.MenuResponse, error) {
 	menu, err := service.menuRepository.GetMenuByUrlKeyAndUserGroupID(ctx, urlKey, userGroupID)
 	if err != nil {

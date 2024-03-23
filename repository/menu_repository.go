@@ -32,6 +32,18 @@ func (r *MenuRepositoryImpl) GetMenuByUserGroupID(ctx context.Context, userGroup
 	return menus, nil
 }
 
+func (r *MenuRepositoryImpl) GetMainMenu(ctx context.Context) ([]entity.Menu, error) {
+	var menus []entity.Menu
+	err := r.db.
+		Where("parent_id = ?", 1).
+		Find(&menus).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return menus, nil
+}
+
 func (r *MenuRepositoryImpl) GetMenuByUrlKeyAndUserGroupID(ctx context.Context, urlKey string, userGroupID int) (*entity.MenuWithSubMenus, error) {
 	var menu entity.MenuWithSubMenus
 	// menu join to user_group_menu
@@ -83,4 +95,18 @@ func (r *MenuRepositoryImpl) GetMenuAccessByUserGroupID(ctx context.Context, use
 		return nil, err
 	}
 	return menu, nil
+}
+
+func (r *MenuRepositoryImpl) PluckIDByIDOrParentID(ctx context.Context, ids []int) ([]int, error) {
+	var result []int
+	var menu entity.Menu
+	err := r.db.
+		Model(&menu).
+		Where("id IN ? OR parent_id IN ?", ids, ids).
+		Pluck("id", &result).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }

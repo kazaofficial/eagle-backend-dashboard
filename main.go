@@ -87,7 +87,7 @@ func main() {
 	menuService := service.NewMenuService(menuRepository)
 	authService := service.NewAuthService(userRepository)
 	userService := service.NewUserService(userRepository)
-	userGroupMenuService := service.NewUserGroupMenuService(userGroupMenuRepository)
+	userGroupMenuService := service.NewUserGroupMenuService(userGroupMenuRepository, menuRepository)
 
 	// add middleware
 	app.Use(middleware.AuthenticationMiddleware())

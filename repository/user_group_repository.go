@@ -20,7 +20,7 @@ func NewUserGroupRepository(db *gorm.DB) UserGroupRepository {
 func (r *UserGroupRepositoryImpl) GetUserGroup(ctx context.Context, limit *int, offset *int, sort *string) ([]entity.UserGroup, error) {
 	var userGroups []entity.UserGroup
 	query := r.db
-	query = query.Joins("LEFT JOIN users ON user_groups.id = users.user_group_id").
+	query = query.Joins("LEFT JOIN users ON user_groups.id = users.user_group_id AND users.deleted_at IS NULL").
 		Select("user_groups.*, COUNT(users.id) AS number_of_users").
 		Group("user_groups.id")
 	if limit != nil {

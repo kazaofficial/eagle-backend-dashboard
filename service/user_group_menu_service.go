@@ -10,12 +10,14 @@ import (
 
 type userGroupMenuServiceImpl struct {
 	userGroupMenuRepository repository.UserGroupMenuRepository
+	menuRepository          repository.MenuRepository
 }
 
 // NewUserGroupMenuService creates a new instance of UserGroupMenuService.
-func NewUserGroupMenuService(userGroupMenuRepository repository.UserGroupMenuRepository) UserGroupMenuService {
+func NewUserGroupMenuService(userGroupMenuRepository repository.UserGroupMenuRepository, menuRepository repository.MenuRepository) UserGroupMenuService {
 	return &userGroupMenuServiceImpl{
 		userGroupMenuRepository: userGroupMenuRepository,
+		menuRepository:          menuRepository,
 	}
 }
 
@@ -54,7 +56,15 @@ func (s *userGroupMenuServiceImpl) CreateManyUserGroupMenu(ctx context.Context, 
 }
 
 func (s *userGroupMenuServiceImpl) DeleteManyUserGroupMenu(ctx context.Context, request dto.UserGroupMenuRequest) error {
-	return s.userGroupMenuRepository.DeleteManyUserGroupMenuByUserGroupIDAndMenuIDs(ctx, request.UserGroupID, request.MenuIDs)
+	menuIDs, err := s.menuRepository.PluckIDByIDOrParentID(ctx, request.MenuIDs)
+	if err != nil {
+		return err
+	}
+	menuIDs, err = s.menuRepository.PluckIDByIDOrParentID(ctx, menuIDs)
+	if err != nil {
+		return err
+	}
+	return s.userGroupMenuRepository.DeleteManyUserGroupMenuByUserGroupIDAndMenuIDs(ctx, request.UserGroupID, menuIDs)
 }
 
 func ConvertUserGroupMenuResponseFromEntity(userGroupMenu entity.UserGroupMenu) dto.UserGroupMenuResponse {
