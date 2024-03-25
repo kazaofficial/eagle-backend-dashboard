@@ -43,12 +43,12 @@ func (service *UserGroupServiceImpl) GetUserGroup(ctx context.Context, request *
 		sort = strings.ReplaceAll(sort, ".", " ")
 	}
 
-	userGroups, err := service.userGroupRepository.GetUserGroup(ctx, &limit, &offset, &sort)
+	userGroups, err := service.userGroupRepository.GetUserGroup(ctx, &limit, &offset, &sort, request.Search)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	countUserGroups, err := service.userGroupRepository.CountUserGroup(ctx)
+	countUserGroups, err := service.userGroupRepository.CountUserGroup(ctx, request.Search)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -89,12 +89,12 @@ func (service *UserGroupServiceImpl) GetUserGroupWithAccess(ctx context.Context,
 		sort = strings.ReplaceAll(sort, ".", " ")
 	}
 
-	userGroups, err := service.userGroupRepository.GetUserGroup(ctx, &limit, &offset, &sort)
+	userGroups, err := service.userGroupRepository.GetUserGroup(ctx, &limit, &offset, &sort, request.Search)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	countUserGroups, err := service.userGroupRepository.CountUserGroup(ctx)
+	countUserGroups, err := service.userGroupRepository.CountUserGroup(ctx, request.Search)
 	if err != nil {
 		return nil, nil, err
 	}

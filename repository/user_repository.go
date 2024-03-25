@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"eagle-backend-dashboard/entity"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -31,7 +32,7 @@ func (r *UserRepositoryImpl) GetUser(ctx context.Context, limit *int, offset *in
 	}
 	if search != "" {
 		// query where name like %search% or username like %search%
-		query = query.Where("name LIKE ? OR username LIKE ?", "%"+search+"%", "%"+search+"%")
+		query = query.Where("LOWER(name) LIKE ? OR LOWER(username) LIKE ?", "%"+strings.ToLower(search)+"%", "%"+strings.ToLower(search)+"%")
 	}
 	query = query.Where("id != ?", 1).Preload("UserGroup").Preload("CreatedByUser")
 	err := query.Find(&users).Error
@@ -46,7 +47,7 @@ func (r *UserRepositoryImpl) CountUser(ctx context.Context, search string) (int,
 	query := r.db.Model(&entity.User{})
 	if search != "" {
 		// query where name like %search% or username like %search%
-		query = query.Where("name LIKE ? OR username LIKE ?", "%"+search+"%", "%"+search+"%")
+		query = query.Where("LOWER(name) LIKE ? OR LOWER(username) LIKE ?", "%"+strings.ToLower(search)+"%", "%"+strings.ToLower(search)+"%")
 	}
 	err := query.Where("id != ?", 1).Count(&count).Error
 	if err != nil {

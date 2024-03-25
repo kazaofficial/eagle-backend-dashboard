@@ -23,7 +23,8 @@ type UserGroupRequest struct {
 }
 
 type UserGroupListRequest struct {
-	Page  *int   `json:"page"`
-	Limit *int   `json:"limit"`
-	Sort  string `json:"sort"`
+	Page   *int   `json:"page"`
+	Limit  *int   `json:"limit"`
+	Sort   string `json:"sort"`
+	Search string `json:"search"`
 }

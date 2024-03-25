@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"eagle-backend-dashboard/entity"
+	"strings"
 
 	"gorm.io/gorm"
 )
@@ -17,7 +18,7 @@ func NewUserGroupRepository(db *gorm.DB) UserGroupRepository {
 	}
 }
 
-func (r *UserGroupRepositoryImpl) GetUserGroup(ctx context.Context, limit *int, offset *int, sort *string) ([]entity.UserGroup, error) {
+func (r *UserGroupRepositoryImpl) GetUserGroup(ctx context.Context, limit *int, offset *int, sort *string, search string) ([]entity.UserGroup, error) {
 	var userGroups []entity.UserGroup
 	query := r.db
 	query = query.Joins("LEFT JOIN users ON user_groups.id = users.user_group_id AND users.deleted_at IS NULL").
@@ -32,6 +33,10 @@ func (r *UserGroupRepositoryImpl) GetUserGroup(ctx context.Context, limit *int, 
 	if sort != nil {
 		query = query.Order(*sort)
 	}
+	if search != "" {
+
+		query = query.Where("LOWER(user_groups.name) LIKE ?", "%"+strings.ToLower(search)+"%")
+	}
 	query = query.Where("user_groups.id != ?", 1)
 	err := query.Find(&userGroups).Error
 	if err != nil {
@@ -40,9 +45,14 @@ func (r *UserGroupRepositoryImpl) GetUserGroup(ctx context.Context, limit *int, 
 	return userGroups, nil
 }
 
-func (r *UserGroupRepositoryImpl) CountUserGroup(ctx context.Context) (int, error) {
+func (r *UserGroupRepositoryImpl) CountUserGroup(ctx context.Context, search string) (int, error) {
 	var count int64
-	err := r.db.Model(&entity.UserGroup{}).Where("user_groups.id != ?", 1).Count(&count).Error
+	query := r.db.Model(&entity.UserGroup{}).Where("user_groups.id != ?", 1)
+	if search != "" {
+		// convert to lower case at where
+		query = query.Where("LOWER(user_groups.name) LIKE ?", "%"+strings.ToLower(search)+"%")
+	}
+	err := query.Count(&count).Error
 	if err != nil {
 		return 0, err
 	}
