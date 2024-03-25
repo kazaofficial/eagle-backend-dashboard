@@ -38,7 +38,8 @@ type UserUpdateRequest struct {
 }
 
 type UserListRequest struct {
-	Page  *int   `json:"page"`
-	Limit *int   `json:"limit"`
-	Sort  string `json:"sort"`
+	Page   *int   `json:"page"`
+	Limit  *int   `json:"limit"`
+	Sort   string `json:"sort"`
+	Search string `json:"search"`
 }

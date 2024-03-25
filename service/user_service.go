@@ -41,12 +41,12 @@ func (service *UserServiceImpl) GetUser(ctx context.Context, request *dto.UserLi
 		sort = strings.ReplaceAll(sort, ".", " ")
 	}
 
-	users, err := service.UserRepository.GetUser(ctx, &limit, &offset, &sort)
+	users, err := service.UserRepository.GetUser(ctx, &limit, &offset, &sort, request.Search)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	countUsers, err := service.UserRepository.CountUser(ctx)
+	countUsers, err := service.UserRepository.CountUser(ctx, request.Search)
 	if err != nil {
 		return nil, nil, err
 	}

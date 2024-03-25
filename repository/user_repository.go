@@ -17,7 +17,7 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	}
 }
 
-func (r *UserRepositoryImpl) GetUser(ctx context.Context, limit *int, offset *int, sort *string) ([]entity.User, error) {
+func (r *UserRepositoryImpl) GetUser(ctx context.Context, limit *int, offset *int, sort *string, search string) ([]entity.User, error) {
 	var users []entity.User
 	query := r.db
 	if limit != nil {
@@ -29,6 +29,10 @@ func (r *UserRepositoryImpl) GetUser(ctx context.Context, limit *int, offset *in
 	if sort != nil {
 		query = query.Order(*sort)
 	}
+	if search != "" {
+		// query where name like %search% or username like %search%
+		query = query.Where("name LIKE ? OR username LIKE ?", "%"+search+"%", "%"+search+"%")
+	}
 	query = query.Where("id != ?", 1).Preload("UserGroup").Preload("CreatedByUser")
 	err := query.Find(&users).Error
 	if err != nil {
@@ -37,9 +41,14 @@ func (r *UserRepositoryImpl) GetUser(ctx context.Context, limit *int, offset *in
 	return users, nil
 }
 
-func (r *UserRepositoryImpl) CountUser(ctx context.Context) (int, error) {
+func (r *UserRepositoryImpl) CountUser(ctx context.Context, search string) (int, error) {
 	var count int64
-	err := r.db.Model(&entity.User{}).Where("id != ?", 1).Count(&count).Error
+	query := r.db.Model(&entity.User{})
+	if search != "" {
+		// query where name like %search% or username like %search%
+		query = query.Where("name LIKE ? OR username LIKE ?", "%"+search+"%", "%"+search+"%")
+	}
+	err := query.Where("id != ?", 1).Count(&count).Error
 	if err != nil {
 		return 0, err
 	}
