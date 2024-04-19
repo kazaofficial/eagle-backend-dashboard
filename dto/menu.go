@@ -11,6 +11,7 @@ type MenuResponse struct {
 	Icon        string         `json:"icon,omitempty"`
 	Url         string         `json:"url,omitempty"`
 	SubMenus    []MenuResponse `json:"sub_menus"`
+	IsShown     bool           `json:"is_shown,omitempty"`
 	IsActive    *bool          `json:"is_active,omitempty"`
 	CreatedAt   *time.Time     `json:"created_at,omitempty"`
 	UpdatedAt   *time.Time     `json:"updated_at,omitempty"`

@@ -58,7 +58,7 @@ func MenuSeeders() {
 			Description: "Main menu",
 			ParentID:    &mainID,
 			Icon:        "material-symbols:bookmark-manager-rounded",
-			Url:         "/manajemen-data-proses/koneksi-ke-sumber-data/tambah-koneksi",
+			Url:         "/manajemen-data-proses/koneksi-ke-sumber-data/daftar-koneksi",
 		},
 		{
 			ID:          4,
@@ -147,7 +147,7 @@ func MenuSeeders() {
 			UrlKey:      "manajemen-data-proses,koneksi-ke-sumber-data",
 			Description: "Koneksi ke Sumber Data menu",
 			ParentID:    &manajemenDataProsesID,
-			Url:         "/manajemen-data-proses/koneksi-ke-sumber-data/tambah-koneksi",
+			Url:         "/manajemen-data-proses/koneksi-ke-sumber-data/daftar-koneksi",
 			Icon:        "majesticons:data",
 		},
 		{
@@ -304,18 +304,20 @@ func MenuSeeders() {
 		},
 		{
 			ID:          32,
-			Name:        "Tambah Koneksi",
-			Description: "Tambah Koneksi menu",
+			Name:        "Daftar Koneksi",
+			Description: "Daftar Koneksi menu",
 			ParentID:    &koneksiKeSumberDataID,
-			UrlKey:      "manajemen-data-proses,koneksi-ke-sumber-data,tambah-koneksi",
+			UrlKey:      "manajemen-data-proses,koneksi-ke-sumber-data,daftar-koneksi",
+			Url:         "/manajemen-data-proses/koneksi-ke-sumber-data/daftar-koneksi",
 			Icon:        "majesticons:data",
 		},
 		{
 			ID:          33,
-			Name:        "Ubah Koneksi",
-			Description: "Ubah Koneksi menu",
+			Name:        "Tambah Koneksi",
+			Description: "Tambah Koneksi menu",
 			ParentID:    &koneksiKeSumberDataID,
-			UrlKey:      "manajemen-data-proses,koneksi-ke-sumber-data,ubah-koneksi",
+			UrlKey:      "manajemen-data-proses,koneksi-ke-sumber-data,tambah-koneksi",
+			Url:         "/manajemen-data-proses/koneksi-ke-sumber-data/tambah-koneksi",
 			Icon:        "majesticons:data",
 		},
 		{
@@ -353,9 +355,15 @@ func MenuSeeders() {
 	}
 
 	for _, menu := range menus {
-		err := db.FirstOrCreate(&menu).Error
-		if err != nil {
-			log.Fatalf(err.Error())
+		// update if exist or create new if not exist
+		err := db.Save(&menu).Error
+		if err != nil && err.Error() != "record not found" {
+			log.Default().Println(err.Error())
+			// create new
+			err = db.Create(&menu).Error
+			if err != nil {
+				log.Fatalf(err.Error())
+			}
 		}
 	}
 
