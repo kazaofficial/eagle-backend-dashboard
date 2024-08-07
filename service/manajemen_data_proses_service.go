@@ -13,12 +13,12 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
-type OlahDataServiceImpl struct {
+type ManajemenDataProsesServiceImpl struct {
 	daftarProsesPenarikanDataRepository repository.DaftarProsesPenarikanDataRepository
 }
 
-func NewOlahDataService(daftarProsesPenarikanDataRepository repository.DaftarProsesPenarikanDataRepository) OlahDataService {
-	return &OlahDataServiceImpl{
+func NewManajemenDataProsesService(daftarProsesPenarikanDataRepository repository.DaftarProsesPenarikanDataRepository) ManajemenDataProsesService {
+	return &ManajemenDataProsesServiceImpl{
 		daftarProsesPenarikanDataRepository: daftarProsesPenarikanDataRepository,
 	}
 }
@@ -96,7 +96,7 @@ func GeneratePenarikanData(request *dto.DaftarProsesPenarikanDataRequest) error 
 	return nil
 }
 
-func (service *OlahDataServiceImpl) TestSSHToServer() error {
+func (service *ManajemenDataProsesServiceImpl) TestSSHToServer() error {
 	client, err := SSHToServer()
 	if err != nil {
 		return err
@@ -123,7 +123,7 @@ func (service *OlahDataServiceImpl) TestSSHToServer() error {
 	return nil
 }
 
-func (service *OlahDataServiceImpl) GetDaftarProsesPenarikanData(ctx context.Context, request *dto.DaftarProsesPenarikanDataListRequest) ([]dto.DaftarProsesPenarikanDataResponse, *dto.Pagination, error) {
+func (service *ManajemenDataProsesServiceImpl) GetDaftarProsesPenarikanData(ctx context.Context, request *dto.DaftarProsesPenarikanDataListRequest) ([]dto.DaftarProsesPenarikanDataResponse, *dto.Pagination, error) {
 	offset := 0
 	page := 1
 	limit := 10
@@ -169,7 +169,7 @@ func (service *OlahDataServiceImpl) GetDaftarProsesPenarikanData(ctx context.Con
 	return daftarProsesPenarikanDataResponses, &pagination, nil
 }
 
-func (service *OlahDataServiceImpl) GetDaftarProsesPenarikanDataByID(ctx context.Context, id int) (*dto.DaftarProsesPenarikanDataResponse, error) {
+func (service *ManajemenDataProsesServiceImpl) GetDaftarProsesPenarikanDataByID(ctx context.Context, id int) (*dto.DaftarProsesPenarikanDataResponse, error) {
 	daftarProsesPenarikanData, err := service.daftarProsesPenarikanDataRepository.GetDaftarProsesPenarikanDataByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -179,7 +179,7 @@ func (service *OlahDataServiceImpl) GetDaftarProsesPenarikanDataByID(ctx context
 	return &daftarProsesPenarikanDataResponse, nil
 }
 
-func (service *OlahDataServiceImpl) CreateDaftarProsesPenarikanData(ctx context.Context, request *dto.DaftarProsesPenarikanDataRequest) (*dto.DaftarProsesPenarikanDataResponse, error) {
+func (service *ManajemenDataProsesServiceImpl) CreateDaftarProsesPenarikanData(ctx context.Context, request *dto.DaftarProsesPenarikanDataRequest) (*dto.DaftarProsesPenarikanDataResponse, error) {
 	err := GeneratePenarikanData(request)
 	if err != nil {
 		return nil, err
@@ -201,7 +201,7 @@ func (service *OlahDataServiceImpl) CreateDaftarProsesPenarikanData(ctx context.
 	return &daftarProsesPenarikanDataResponse, nil
 }
 
-func (service *OlahDataServiceImpl) UpdateDaftarProsesPenarikanData(ctx context.Context, id int, request *dto.DaftarProsesPenarikanDataRequest) (*dto.DaftarProsesPenarikanDataResponse, error) {
+func (service *ManajemenDataProsesServiceImpl) UpdateDaftarProsesPenarikanData(ctx context.Context, id int, request *dto.DaftarProsesPenarikanDataRequest) (*dto.DaftarProsesPenarikanDataResponse, error) {
 	err := GeneratePenarikanData(request)
 	if err != nil {
 		return nil, err
@@ -227,7 +227,7 @@ func (service *OlahDataServiceImpl) UpdateDaftarProsesPenarikanData(ctx context.
 	return &daftarProsesPenarikanDataResponse, nil
 }
 
-func (service *OlahDataServiceImpl) DeleteDaftarProsesPenarikanData(ctx context.Context, id int) (*dto.DaftarProsesPenarikanDataResponse, error) {
+func (service *ManajemenDataProsesServiceImpl) DeleteDaftarProsesPenarikanData(ctx context.Context, id int) (*dto.DaftarProsesPenarikanDataResponse, error) {
 	daftarProsesPenarikanData, err := service.daftarProsesPenarikanDataRepository.GetDaftarProsesPenarikanDataByID(ctx, id)
 	if err != nil {
 		return nil, err

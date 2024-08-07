@@ -11,25 +11,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type OlahDataController struct {
-	olahDataService service.OlahDataService
+type ManajemenDataProsesController struct {
+	manajemenDataProsesService service.ManajemenDataProsesService
 }
 
-func NewOlahDataRoutes(handler fiber.Router, olahDataService service.OlahDataService) {
-	r := &OlahDataController{
-		olahDataService: olahDataService,
+func NewManajemenDataProsesRoutes(handler fiber.Router, manajemenDataProsesService service.ManajemenDataProsesService) {
+	r := &ManajemenDataProsesController{
+		manajemenDataProsesService: manajemenDataProsesService,
 	}
 
-	handler.Get("/olahdata/ssh", r.TestSSHToServer)
-	handler.Get("olahdata/daftar-proses-penarikan-data", r.GetDaftarProsesPenarikanData)
-	handler.Get("olahdata/daftar-proses-penarikan-data/:id", r.GetDaftarProsesPenarikanDataByID)
-	handler.Post("olahdata/daftar-proses-penarikan-data", r.CreateDaftarProsesPenarikanData)
-	handler.Put("olahdata/daftar-proses-penarikan-data/:id", r.UpdateDaftarProsesPenarikanData)
-	handler.Delete("olahdata/daftar-proses-penarikan-data/:id", r.DeleteDaftarProsesPenarikanData)
+	handler.Get("/manajemen-data-proses/ssh", r.TestSSHToServer)
+	handler.Get("manajemen-data-proses/penarikan-data", r.GetDaftarProsesPenarikanData)
+	handler.Get("manajemen-data-proses/penarikan-data/:id", r.GetDaftarProsesPenarikanDataByID)
+	handler.Post("manajemen-data-proses/penarikan-data", r.CreateDaftarProsesPenarikanData)
+	handler.Put("manajemen-data-proses/penarikan-data/:id", r.UpdateDaftarProsesPenarikanData)
+	handler.Delete("manajemen-data-proses/penarikan-data/:id", r.DeleteDaftarProsesPenarikanData)
 }
 
-func (r *OlahDataController) TestSSHToServer(c *fiber.Ctx) error {
-	err := r.olahDataService.TestSSHToServer()
+func (r *ManajemenDataProsesController) TestSSHToServer(c *fiber.Ctx) error {
+	err := r.manajemenDataProsesService.TestSSHToServer()
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -49,7 +49,7 @@ func (r *OlahDataController) TestSSHToServer(c *fiber.Ctx) error {
 	return c.Status(200).JSON(response)
 }
 
-func (controller *OlahDataController) GetDaftarProsesPenarikanData(c *fiber.Ctx) error {
+func (controller *ManajemenDataProsesController) GetDaftarProsesPenarikanData(c *fiber.Ctx) error {
 	var request dto.DaftarProsesPenarikanDataListRequest
 
 	ctx := c.Context()
@@ -81,7 +81,7 @@ func (controller *OlahDataController) GetDaftarProsesPenarikanData(c *fiber.Ctx)
 		}
 	}
 
-	daftarProsesPenarikanDataResponses, pagination, err := controller.olahDataService.GetDaftarProsesPenarikanData(ctx, &request)
+	daftarProsesPenarikanDataResponses, pagination, err := controller.manajemenDataProsesService.GetDaftarProsesPenarikanData(ctx, &request)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -104,7 +104,7 @@ func (controller *OlahDataController) GetDaftarProsesPenarikanData(c *fiber.Ctx)
 	return c.Status(200).JSON(response)
 }
 
-func (controller *OlahDataController) GetDaftarProsesPenarikanDataByID(c *fiber.Ctx) error {
+func (controller *ManajemenDataProsesController) GetDaftarProsesPenarikanDataByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	ctx := c.Context()
@@ -117,7 +117,7 @@ func (controller *OlahDataController) GetDaftarProsesPenarikanDataByID(c *fiber.
 		}
 		return c.Status(400).JSON(response)
 	}
-	daftarProsesPenarikanDataResponse, err := controller.olahDataService.GetDaftarProsesPenarikanDataByID(ctx, idInt)
+	daftarProsesPenarikanDataResponse, err := controller.manajemenDataProsesService.GetDaftarProsesPenarikanDataByID(ctx, idInt)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -137,7 +137,7 @@ func (controller *OlahDataController) GetDaftarProsesPenarikanDataByID(c *fiber.
 	return c.Status(200).JSON(response)
 }
 
-func (controller *OlahDataController) CreateDaftarProsesPenarikanData(c *fiber.Ctx) error {
+func (controller *ManajemenDataProsesController) CreateDaftarProsesPenarikanData(c *fiber.Ctx) error {
 	var request dto.DaftarProsesPenarikanDataRequest
 
 	ctx := c.Context()
@@ -169,7 +169,7 @@ func (controller *OlahDataController) CreateDaftarProsesPenarikanData(c *fiber.C
 		}
 	}
 
-	daftarProsesPenarikanDataResponse, err := controller.olahDataService.CreateDaftarProsesPenarikanData(ctx, &request)
+	daftarProsesPenarikanDataResponse, err := controller.manajemenDataProsesService.CreateDaftarProsesPenarikanData(ctx, &request)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -189,7 +189,7 @@ func (controller *OlahDataController) CreateDaftarProsesPenarikanData(c *fiber.C
 	return c.Status(200).JSON(response)
 }
 
-func (controller *OlahDataController) UpdateDaftarProsesPenarikanData(c *fiber.Ctx) error {
+func (controller *ManajemenDataProsesController) UpdateDaftarProsesPenarikanData(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	ctx := c.Context()
@@ -232,7 +232,7 @@ func (controller *OlahDataController) UpdateDaftarProsesPenarikanData(c *fiber.C
 		}
 	}
 
-	daftarProsesPenarikanDataResponse, err := controller.olahDataService.UpdateDaftarProsesPenarikanData(ctx, idInt, &request)
+	daftarProsesPenarikanDataResponse, err := controller.manajemenDataProsesService.UpdateDaftarProsesPenarikanData(ctx, idInt, &request)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		response := dto.ErrorResponse{
@@ -252,7 +252,7 @@ func (controller *OlahDataController) UpdateDaftarProsesPenarikanData(c *fiber.C
 	return c.Status(200).JSON(response)
 }
 
-func (controller *OlahDataController) DeleteDaftarProsesPenarikanData(c *fiber.Ctx) error {
+func (controller *ManajemenDataProsesController) DeleteDaftarProsesPenarikanData(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	ctx := c.Context()
@@ -266,7 +266,7 @@ func (controller *OlahDataController) DeleteDaftarProsesPenarikanData(c *fiber.C
 		return c.Status(400).JSON(response)
 	}
 
-	daftarProsesPenarikanDataResponse, err := controller.olahDataService.DeleteDaftarProsesPenarikanData(ctx, idInt)
+	daftarProsesPenarikanDataResponse, err := controller.manajemenDataProsesService.DeleteDaftarProsesPenarikanData(ctx, idInt)
 	if err != nil {
 		status_code, message := utils.GetStatusCodeFromError(err)
 		if err.Error() == "cannot delete this user group" {

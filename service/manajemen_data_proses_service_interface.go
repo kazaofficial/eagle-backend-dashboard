@@ -6,7 +6,7 @@ import (
 )
 
 // MenuService defines the methods for interacting with menus.
-type OlahDataService interface {
+type ManajemenDataProsesService interface {
 	TestSSHToServer() error
 	GetDaftarProsesPenarikanData(ctx context.Context, request *dto.DaftarProsesPenarikanDataListRequest) ([]dto.DaftarProsesPenarikanDataResponse, *dto.Pagination, error)
 	GetDaftarProsesPenarikanDataByID(ctx context.Context, id int) (*dto.DaftarProsesPenarikanDataResponse, error)
