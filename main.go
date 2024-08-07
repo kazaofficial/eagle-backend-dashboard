@@ -81,6 +81,7 @@ func main() {
 	menuRepository := repository.NewMenuRepository(db)
 	userRepository := repository.NewUserRepository(db)
 	userGroupMenuRepository := repository.NewUserGroupMenuRepository(db)
+	daftarProsesPenarikanDataRepository := repository.NewDaftarProsesPenarikanDataRepository(db)
 
 	// initialize services
 	userGroupService := service.NewUserGroupService(userGroupRepository, menuRepository)
@@ -89,6 +90,7 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	userGroupMenuService := service.NewUserGroupMenuService(userGroupMenuRepository, menuRepository)
 	supersetService := service.NewSupersetService()
+	olahDataService := service.NewOlahDataService(daftarProsesPenarikanDataRepository)
 
 	// add middleware
 	app.Use(middleware.AuthenticationMiddleware())
@@ -101,6 +103,7 @@ func main() {
 	controller.NewUserRoutes(apiv1, userService)
 	controller.NewUserGroupMenuRoutes(apiv1, userGroupMenuService)
 	controller.NewSupersetRoutes(apiv1, supersetService)
+	controller.NewOlahDataRoutes(apiv1, olahDataService)
 
 	// Add a middleware for handling not found errors
 	app.Use(func(c *fiber.Ctx) error {
